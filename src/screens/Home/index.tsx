@@ -1,5 +1,6 @@
-import React from "react";
-import { StatusBar } from "react-native";
+import React, { useCallback } from "react";
+import { ListRenderItem, StatusBar } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { CarCard } from "../../components/CarCard";
 
@@ -12,20 +13,64 @@ import {
   HeaderContent,
 } from "./styles";
 
-const carData = {
-  name: "Audi",
-  brand: "RS 5 Coupé",
+interface carDataSchema {
+  id: number;
+  name: string;
+  brand: string;
   rent: {
-    price: 120,
-    period: "Ao dia",
+    price: number;
+    period: string;
+  };
+  thumbnail: string;
+}
+
+const carData: carDataSchema[] = [
+  {
+    id: 0,
+    name: "Audi",
+    brand: "RS 5 Coupé",
+    rent: {
+      price: 120,
+      period: "Ao dia",
+    },
+    thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
   },
-  thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
-};
+  {
+    id: 1,
+    name: "Audi",
+    brand: "RS 5 Coupé",
+    rent: {
+      price: 120,
+      period: "Ao dia",
+    },
+    thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
+  },
+  {
+    id: 2,
+    name: "Audi",
+    brand: "RS 5 Coupé",
+    rent: {
+      price: 120,
+      period: "Ao dia",
+    },
+    thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
+  },
+];
 
 export function Home() {
-  const renderItem = () => {
-    return <CarCard data={carData} />;
+  const navigation = useNavigation();
+
+  const handleCarDetails = () => {
+    navigation.navigate("CarDetails");
   };
+
+  const renderItem: ListRenderItem<carDataSchema> = useCallback(
+    (props) => {
+      const { item } = props;
+      return <CarCard data={item} onPress={handleCarDetails} />;
+    },
+    [carData]
+  );
 
   return (
     <Container>
@@ -38,14 +83,14 @@ export function Home() {
       <Header>
         <HeaderContent>
           <RentxLogo />
-          <TotalCars>Total de 12 carros</TotalCars>
+          <TotalCars>Total de {carData.length} carros</TotalCars>
         </HeaderContent>
       </Header>
 
       <CarList
-        data={[1, 2, 3]}
+        data={carData}
         renderItem={renderItem}
-        keyExtractor={(item) => String(item)}
+        keyExtractor={(item) => String(item.id)}
       />
     </Container>
   );

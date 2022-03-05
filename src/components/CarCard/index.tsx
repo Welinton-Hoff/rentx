@@ -1,18 +1,19 @@
 import React from "react";
+import { TouchableOpacityProps } from "react-native";
 
 import GasolineSvg from "../../assets/gasoline.svg";
 
 import {
-  Container,
-  Details,
-  Brand,
-  CarName,
-  About,
   Rent,
-  Period,
-  Price,
   Type,
+  Brand,
+  About,
+  Price,
+  Period,
+  CarName,
+  Details,
   CarImage,
+  Container,
 } from "./styles";
 
 interface CarCardData {
@@ -25,13 +26,15 @@ interface CarCardData {
   thumbnail: string;
 }
 
-interface CarCardProps {
+interface CarCardProps extends TouchableOpacityProps {
   data: CarCardData;
 }
 
-export function CarCard({ data }: CarCardProps) {
+export function CarCard(props: CarCardProps) {
+  const { data, ...rest } = props;
+
   return (
-    <Container>
+    <Container {...rest} activeOpacity={0.7}>
       <Details>
         <Brand>{data.name}</Brand>
         <CarName>{data.brand}</CarName>

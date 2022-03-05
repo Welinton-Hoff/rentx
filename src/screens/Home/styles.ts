@@ -43,4 +43,4 @@ export const CarList = styled(FlatList).attrs({
     padding: 24,
   },
   showVerticalScrollIndicator: false,
-})``;
+})`` as unknown as typeof FlatList;

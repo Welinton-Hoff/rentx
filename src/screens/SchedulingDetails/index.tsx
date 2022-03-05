@@ -39,8 +39,15 @@ import {
   RentalPriceDetails,
   CalendarIconContainer,
 } from "./styles";
+import { useNavigation } from "@react-navigation/native";
 
 export function SchedulingDetails() {
+  const navigation = useNavigation();
+
+  const handleConfirmRental = () => {
+    navigation.navigate("SchedulingComplete");
+  };
+
   return (
     <Container>
       <Header>
@@ -104,7 +111,7 @@ export function SchedulingDetails() {
       </Content>
 
       <Footer>
-        <RentNowButton title="Alugar agora" onPress={() => {}} />
+        <RentNowButton title="Alugar agora" onPress={handleConfirmRental} />
       </Footer>
     </Container>
   );

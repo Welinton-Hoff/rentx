@@ -1,24 +1,31 @@
 import React from "react";
 import { StatusBar } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import ArrowSvg from "../../assets/arrow.svg";
 import { Button } from "../../components/Button";
 import { Calendar } from "../../components/Calendar";
 
 import {
-  Container,
   Header,
-  TitleHeader,
-  HeaderButton,
-  RentalPeriod,
-  DateInfo,
-  DateTitle,
-  DateValue,
   Footer,
   Content,
+  DateInfo,
+  Container,
+  DateTitle,
+  DateValue,
+  TitleHeader,
+  RentalPeriod,
+  HeaderButton,
 } from "./styles";
 
 export function Scheduling() {
+  const navigation = useNavigation();
+
+  const handleSchedulingDetails = () => {
+    navigation.navigate("SchedulingDetails");
+  };
+
   return (
     <Container>
       <Header>
@@ -53,7 +60,7 @@ export function Scheduling() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" onPress={() => {}} />
+        <Button title="Confirmar" onPress={handleSchedulingDetails} />
       </Footer>
     </Container>
   );

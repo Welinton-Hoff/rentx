@@ -1,7 +1,10 @@
+import { ScrollView } from "react-native";
 import styled from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { getStatusBarHeight } from "react-native-iphone-x-helper";
-import { ScrollView } from "react-native";
+import {
+  getBottomSpace,
+  getStatusBarHeight,
+} from "react-native-iphone-x-helper";
 
 export const Container = styled.View`
   flex: 1;
@@ -87,4 +90,10 @@ export const Acessories = styled.View`
   justify-content: space-between;
 
   margin-top: ${RFValue(16)}px;
+`;
+
+export const Footer = styled.View`
+  width: 100%;
+  padding: 24px 24px ${getBottomSpace() + 24}px;
+  background-color: ${({ theme }) => theme.colors.background_secudanry};
 `;

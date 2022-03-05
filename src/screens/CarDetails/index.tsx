@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Slider } from "../../components/Slider";
+import { Button } from "../../components/Button";
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 
@@ -17,6 +18,7 @@ import {
   Brand,
   About,
   Header,
+  Footer,
   Period,
   Content,
   Details,
@@ -68,6 +70,10 @@ export function CarDetails() {
           para quem gosta de acelerar.
         </About>
       </Content>
+
+      <Footer>
+        <Button title="Confirmar" onPress={() => {}} />
+      </Footer>
     </Container>
   );
 }

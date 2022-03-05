@@ -3,6 +3,7 @@ import { StatusBar } from "react-native";
 
 import ArrowSvg from "../../assets/arrow.svg";
 import { Button } from "../../components/Button";
+import { Calendar } from "../../components/Calendar";
 
 import {
   Container,
@@ -47,7 +48,9 @@ export function Scheduling() {
         </RentalPeriod>
       </Header>
 
-      <Content></Content>
+      <Content>
+        <Calendar />
+      </Content>
 
       <Footer>
         <Button title="Confirmar" onPress={() => {}} />

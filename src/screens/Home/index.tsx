@@ -1,8 +1,11 @@
-import React, { useCallback } from "react";
 import { ListRenderItem, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
 
+import api from "../../services/api";
+import { CarDTO } from "../../dtos/CarDTO";
 import { CarCard } from "../../components/CarCard";
+import { LoadView } from "../../components/LoadView";
 
 import {
   Header,
@@ -13,64 +16,51 @@ import {
   HeaderContent,
 } from "./styles";
 
-interface carDataSchema {
-  id: number;
-  name: string;
-  brand: string;
-  rent: {
-    price: number;
-    period: string;
-  };
-  thumbnail: string;
-}
-
-const carData: carDataSchema[] = [
-  {
-    id: 0,
-    name: "Audi",
-    brand: "RS 5 Coupé",
-    rent: {
-      price: 120,
-      period: "Ao dia",
-    },
-    thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
-  },
-  {
-    id: 1,
-    name: "Audi",
-    brand: "RS 5 Coupé",
-    rent: {
-      price: 120,
-      period: "Ao dia",
-    },
-    thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
-  },
-  {
-    id: 2,
-    name: "Audi",
-    brand: "RS 5 Coupé",
-    rent: {
-      price: 120,
-      period: "Ao dia",
-    },
-    thumbnail: "https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png",
-  },
-];
-
 export function Home() {
   const navigation = useNavigation();
+  const [isLoading, setLoading] = useState(true);
+  const [carData, setCarData] = useState<CarDTO[]>([]);
 
   const handleCarDetails = () => {
     navigation.navigate("CarDetails");
   };
 
-  const renderItem: ListRenderItem<carDataSchema> = useCallback(
+  const renderItem: ListRenderItem<CarDTO> = useCallback(
     (props) => {
       const { item } = props;
       return <CarCard data={item} onPress={handleCarDetails} />;
     },
     [carData]
   );
+
+  const ApiResponse = () => {
+    if (isLoading) {
+      return <LoadView />;
+    }
+
+    return (
+      <CarList
+        data={carData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
+    );
+  };
+
+  useEffect(() => {
+    async function fetchCars() {
+      try {
+        const response = await api.get("/cars");
+        setCarData(response.data);
+      } catch (error) {
+        console.log("error ==> ", error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCars();
+  }, []);
 
   return (
     <Container>
@@ -79,19 +69,14 @@ export function Home() {
         barStyle="light-content"
         backgroundColor="transparent"
       />
-
       <Header>
         <HeaderContent>
           <RentxLogo />
-          <TotalCars>Total de {carData.length} carros</TotalCars>
+          <TotalCars>Total de {carData?.length} carros</TotalCars>
         </HeaderContent>
       </Header>
 
-      <CarList
-        data={carData}
-        renderItem={renderItem}
-        keyExtractor={(item) => String(item.id)}
-      />
+      <ApiResponse />
     </Container>
   );
 }

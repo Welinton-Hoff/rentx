@@ -21,14 +21,14 @@ export function Home() {
   const [isLoading, setLoading] = useState(true);
   const [carData, setCarData] = useState<CarDTO[]>([]);
 
-  const handleCarDetails = () => {
-    navigation.navigate("CarDetails");
+  const handleCarDetails = (car: CarDTO) => {
+    navigation.navigate("CarDetails"), { car };
   };
 
   const renderItem: ListRenderItem<CarDTO> = useCallback(
     (props) => {
       const { item } = props;
-      return <CarCard data={item} onPress={handleCarDetails} />;
+      return <CarCard data={item} onPress={() => handleCarDetails(item)} />;
     },
     [carData]
   );

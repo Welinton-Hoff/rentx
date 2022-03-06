@@ -82,7 +82,7 @@ export const About = styled.Text`
   margin-top: ${RFValue(23)}px;
 `;
 
-export const Acessories = styled.View`
+export const Accessories = styled.View`
   width: 100%;
   flex-wrap: wrap;
   flex-direction: row;

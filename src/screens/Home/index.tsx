@@ -22,7 +22,7 @@ export function Home() {
   const [carData, setCarData] = useState<CarDTO[]>([]);
 
   const handleCarDetails = (car: CarDTO) => {
-    navigation.navigate("CarDetails"), { car };
+    navigation.navigate("CarDetails", { car });
   };
 
   const renderItem: ListRenderItem<CarDTO> = useCallback(

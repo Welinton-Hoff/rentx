@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacityProps } from "react-native";
 
 import { CarDTO } from "../../dtos/CarDTO";
-import GasolineSvg from "../../assets/gasoline.svg";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 import {
   Rent,
@@ -23,6 +23,7 @@ interface CarCardProps extends TouchableOpacityProps {
 
 export function CarCard(props: CarCardProps) {
   const { data, ...rest } = props;
+  const MotorICon = getAccessoryIcon(data.fuel_type);
 
   return (
     <Container {...rest} activeOpacity={0.7}>
@@ -37,7 +38,7 @@ export function CarCard(props: CarCardProps) {
           </Rent>
 
           <Type>
-            <GasolineSvg />
+            <MotorICon />
           </Type>
         </About>
       </Details>

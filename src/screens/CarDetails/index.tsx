@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { CarDTO } from "../../dtos/CarDTO";
@@ -6,13 +6,7 @@ import { Slider } from "../../components/Slider";
 import { Button } from "../../components/Button";
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
-
-import speedSvg from "../../assets/speed.svg";
-import forceSvg from "../../assets/force.svg";
-import peopleSvg from "../../assets/people.svg";
-import gasolineSvg from "../../assets/gasoline.svg";
-import exchangeSvg from "../../assets/exchange.svg";
-import accelerationSvg from "../../assets/acceleration.svg";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 import {
   Rent,
@@ -55,9 +49,7 @@ export function CarDetails() {
       </Header>
 
       <CarImages>
-        <Slider
-          imagesUrl={["https://www.pngmart.com/files/1/Audi-RS5-Red-PNG.png"]}
-        />
+        <Slider imagesUrl={car?.photos} />
       </CarImages>
 
       <Content>
@@ -74,8 +66,12 @@ export function CarDetails() {
         </Details>
 
         <Accessories>
-          {car?.accessories.map((item) => (
-            <Accessory key={item.type} name={item.name} icon={peopleSvg} />
+          {car?.accessories.map((accessory) => (
+            <Accessory
+              key={accessory.type}
+              name={accessory.name}
+              icon={getAccessoryIcon(accessory.type)}
+            />
           ))}
         </Accessories>
 

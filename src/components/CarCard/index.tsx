@@ -15,40 +15,69 @@ import {
   Details,
   CarImage,
   Container,
+  PeriodDate,
+  ChevronIcon,
+  RentalPeriod,
+  PeriodWrapper,
+  RentalPeriodTitle,
 } from "./styles";
 
 interface CarCardProps extends TouchableOpacityProps {
   data: CarDTO;
+  endDate?: string;
+  startDate?: string;
 }
 
 export function CarCard(props: CarCardProps) {
-  const { data, ...rest } = props;
+  const { data, endDate, startDate, ...rest } = props;
   const MotorICon = getAccessoryIcon(data.fuel_type);
 
+  const HasRentalPeriod = () => {
+    if (startDate && endDate) {
+      return (
+        <RentalPeriod>
+          <RentalPeriodTitle>Período</RentalPeriodTitle>
+
+          <PeriodWrapper>
+            <PeriodDate>{startDate}</PeriodDate>
+            <ChevronIcon />
+            <PeriodDate>{endDate}</PeriodDate>
+          </PeriodWrapper>
+        </RentalPeriod>
+      );
+    }
+
+    return null;
+  };
+
   return (
-    <Container {...rest} activeOpacity={0.7}>
-      <Details>
-        <Brand>{data.name}</Brand>
-        <CarName>{data.brand}</CarName>
+    <>
+      <Container {...rest} activeOpacity={0.7}>
+        <Details>
+          <Brand>{data.name}</Brand>
+          <CarName>{data.brand}</CarName>
 
-        <About>
-          <Rent>
-            <Period>{data.rent.period}</Period>
-            <Price>{`R$ ${data.rent.price}`}</Price>
-          </Rent>
+          <About>
+            <Rent>
+              <Period>{data.rent.period}</Period>
+              <Price>{`R$ ${data.rent.price}`}</Price>
+            </Rent>
 
-          <Type>
-            <MotorICon />
-          </Type>
-        </About>
-      </Details>
+            <Type>
+              <MotorICon />
+            </Type>
+          </About>
+        </Details>
 
-      <CarImage
-        source={{
-          uri: data.thumbnail,
-        }}
-        resizeMode="contain"
-      />
-    </Container>
+        <CarImage
+          source={{
+            uri: data.thumbnail,
+          }}
+          resizeMode="contain"
+        />
+      </Container>
+
+      <HasRentalPeriod />
+    </>
   );
 }

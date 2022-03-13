@@ -1,6 +1,7 @@
 import { FlatList } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
+import { Ionicons } from "@expo/vector-icons";
+import { RFValue } from "react-native-responsive-fontsize";
 
 import Logo from "../../assets/logo.svg";
 
@@ -44,3 +45,25 @@ export const CarList = styled(FlatList).attrs({
   },
   showVerticalScrollIndicator: false,
 })`` as unknown as typeof FlatList;
+
+export const MyCarsButton = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})`
+  width: ${RFValue(60)}px;
+  height: ${RFValue(60)}px;
+
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+
+  right: 22px;
+  bottom: 13px;
+  border-radius: 30px;
+  background-color: ${({ theme }) => theme.colors.main};
+`;
+
+export const CarIcon = styled(Ionicons).attrs(({ theme }) => ({
+  size: RFValue(32),
+  name: "ios-car-sport",
+  color: theme.colors.shape,
+}))``;

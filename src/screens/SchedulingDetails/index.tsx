@@ -52,6 +52,7 @@ interface RentalSchema {
 }
 
 export function SchedulingDetails() {
+  const [scheduling, setScheduling] = useState(false);
   const [rentalPeriod, setRentalPeriod] = useState<RentalSchema>(
     {} as RentalSchema
   );
@@ -63,15 +64,27 @@ export function SchedulingDetails() {
 
   const handleConfirmRental = async () => {
     try {
+      setScheduling(true);
+
       const response = await api.get(`/schedules_bycars/${car.id}`);
       const unavailable_dates = [...response.data.unavailable_dates, ...dates];
+
+      const scheduleCarByUser = await api.post("schedules_byuser", {
+        user_id: 1,
+        car,
+        startDate: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
+        endDate: format(
+          getPlatformDate(new Date(dates[dates.length - 1])),
+          "dd/MM/yyyy"
+        ),
+      });
 
       const scheduleCar = await api.put(`/schedules_bycars/${car.id}`, {
         id: car.id,
         unavailable_dates,
       });
 
-      if (scheduleCar.status === 200) {
+      if (scheduleCar.status === 200 && scheduleCarByUser.status === 201) {
         return navigation.navigate("SchedulingComplete");
       }
     } catch (error) {
@@ -158,7 +171,12 @@ export function SchedulingDetails() {
       </Content>
 
       <Footer>
-        <RentNowButton title="Alugar agora" onPress={handleConfirmRental} />
+        <RentNowButton
+          title="Alugar agora"
+          isLoading={scheduling}
+          isDisabled={scheduling}
+          onPress={handleConfirmRental}
+        />
       </Footer>
     </Container>
   );

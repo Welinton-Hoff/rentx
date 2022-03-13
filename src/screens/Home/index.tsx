@@ -9,10 +9,12 @@ import { LoadView } from "../../components/LoadView";
 
 import {
   Header,
+  CarIcon,
   CarList,
   RentxLogo,
   Container,
   TotalCars,
+  MyCarsButton,
   HeaderContent,
 } from "./styles";
 
@@ -23,6 +25,10 @@ export function Home() {
 
   const handleCarDetails = (car: CarDTO) => {
     navigation.navigate("CarDetails", { car });
+  };
+
+  const handleOpenMyCars = () => {
+    navigation.navigate("MyCars");
   };
 
   const renderItem: ListRenderItem<CarDTO> = useCallback(
@@ -77,6 +83,10 @@ export function Home() {
       </Header>
 
       <ApiResponse />
+
+      <MyCarsButton onPress={handleOpenMyCars}>
+        <CarIcon />
+      </MyCarsButton>
     </Container>
   );
 }

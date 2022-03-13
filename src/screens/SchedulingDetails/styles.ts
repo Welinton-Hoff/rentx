@@ -6,6 +6,7 @@ import {
   getBottomSpace,
   getStatusBarHeight,
 } from "react-native-iphone-x-helper";
+
 import { Button } from "../../components/Button";
 
 export const Container = styled.View`

@@ -1,3 +1,4 @@
+import { ScrollView } from "react-native";
 import styled, { css } from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
 import {
@@ -6,7 +7,6 @@ import {
 } from "react-native-iphone-x-helper";
 
 import { BackButton } from "../../components/BackButton";
-import { ScrollView } from "react-native";
 
 interface DateValueProps {
   selected: boolean;

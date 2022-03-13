@@ -53,10 +53,6 @@ export function Scheduling() {
   );
 
   const handleSchedulingDetails = () => {
-    if (!rentalPeriod.startFormatted || !rentalPeriod.endFormatted) {
-      return Alert.alert("Calendário", "Selecione um período para o aluguel.");
-    }
-
     navigation.navigate("SchedulingDetails", {
       car,
       dates: Object.keys(markedDates),
@@ -132,7 +128,11 @@ export function Scheduling() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" onPress={handleSchedulingDetails} />
+        <Button
+          title="Confirmar"
+          onPress={handleSchedulingDetails}
+          isDisabled={!rentalPeriod.startFormatted}
+        />
       </Footer>
     </Container>
   );

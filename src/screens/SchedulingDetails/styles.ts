@@ -74,7 +74,7 @@ export const CarName = styled.Text`
 
 export const Description = styled.View``;
 
-export const Acessories = styled.View`
+export const Accessories = styled.View`
   width: 100%;
   flex-wrap: wrap;
   flex-direction: row;

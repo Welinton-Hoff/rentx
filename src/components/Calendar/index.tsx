@@ -1,59 +1,39 @@
 import React from "react";
+import { ViewStyle } from "react-native";
+import { useTheme } from "styled-components";
 import { Direction, Theme } from "react-native-calendars/src/types";
 import {
   LocaleConfig,
+  CalendarProps,
   Calendar as CustomCalendar,
 } from "react-native-calendars";
 
 import { Arrow } from "./styles";
-import { ViewStyle } from "react-native";
-import { useTheme } from "styled-components";
+import { ptBR } from "../../config/localeConfig";
 
-LocaleConfig.locales["pt-br"] = {
-  dayNamesShort: ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"],
-  monthNamesShort: [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ],
-  dayNames: [
-    "Domingo",
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
-    "Sábado",
-  ],
-  monthNames: [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ],
-};
-
+LocaleConfig.locales["pt-br"] = ptBR;
 LocaleConfig.defaultLocale = "pt-br";
 
-export function Calendar() {
+interface MarkedDateSchema {
+  [date: string]: {
+    color: string;
+    textColor: string;
+    disabled?: boolean;
+    disableTouchEvent?: boolean;
+  };
+}
+
+interface DayProps {
+  day: number;
+  year: number;
+  month: number;
+  timestamp: number;
+  dateString: string;
+}
+
+function Calendar(props: CalendarProps) {
   const theme = useTheme();
+  const { markedDates, onDayPress } = props;
 
   const headerStyle: ViewStyle = {
     marginBottom: 10,
@@ -84,10 +64,15 @@ export function Calendar() {
   return (
     <CustomCalendar
       firstDay={1}
+      markingType="period"
       theme={calendarTheme}
+      onDayPress={onDayPress}
       renderArrow={renderArrow}
       headerStyle={headerStyle}
+      markedDates={markedDates}
       minDate={String(new Date())}
     />
   );
 }
+
+export { Calendar, MarkedDateSchema, DayProps };

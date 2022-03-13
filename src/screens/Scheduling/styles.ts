@@ -47,7 +47,9 @@ export const RentalPeriod = styled.View`
   margin: ${RFValue(32)}px 0;
 `;
 
-export const DateInfo = styled.View``;
+export const DateInfo = styled.View`
+  width: 85px;
+`;
 
 export const DateTitle = styled.Text`
   font-size: ${RFValue(10)}px;

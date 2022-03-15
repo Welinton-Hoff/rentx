@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
 
@@ -36,6 +36,10 @@ export const CarImageWrapper = styled.View`
   align-items: center;
   justify-content: center;
 `;
+
+export const ImageList = styled(FlatList).attrs({
+  showsHorizontalScrollIndicator: false,
+})`` as unknown as typeof FlatList;
 
 export const CarImage = styled.Image`
   width: ${RFValue(280)}px;

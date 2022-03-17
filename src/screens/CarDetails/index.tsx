@@ -1,4 +1,12 @@
 import React from "react";
+import {
+  Extrapolate,
+  interpolate,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
+import { StatusBar } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { CarDTO } from "../../dtos/CarDTO";
@@ -16,13 +24,14 @@ import {
   Header,
   Footer,
   Period,
-  Content,
   Details,
   CarName,
-  CarImages,
   Container,
   Description,
   Accessories,
+  HeaderAnimated,
+  ScrollAnimanted,
+  CarAnimatedImages,
 } from "./styles";
 
 interface ParamsSchema {
@@ -31,8 +40,29 @@ interface ParamsSchema {
 
 export function CarDetails() {
   const route = useRoute();
+  const scrollY = useSharedValue(0);
   const navigation = useNavigation();
   const { car } = route.params as ParamsSchema;
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const headerStyleAnimation = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        scrollY.value,
+        [0, 200],
+        [200, 70],
+        Extrapolate.CLAMP
+      ),
+    };
+  });
+
+  const sliderStyleAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value, [0, 100], [1, 0], Extrapolate.CLAMP),
+    };
+  });
 
   const handleConfirmRental = () => {
     navigation.navigate("Scheduling", { car });
@@ -44,15 +74,23 @@ export function CarDetails() {
 
   return (
     <Container>
-      <Header>
-        <BackButton onPress={handleGoBackHome} />
-      </Header>
+      <StatusBar
+        translucent
+        barStyle="dark-content"
+        backgroundColor="transparent"
+      />
 
-      <CarImages>
-        <Slider imagesUrl={car?.photos} />
-      </CarImages>
+      <HeaderAnimated style={[headerStyleAnimation]}>
+        <Header>
+          <BackButton onPress={handleGoBackHome} />
+        </Header>
 
-      <Content>
+        <CarAnimatedImages style={sliderStyleAnimation}>
+          <Slider imagesUrl={car?.photos} />
+        </CarAnimatedImages>
+      </HeaderAnimated>
+
+      <ScrollAnimanted onScroll={scrollHandler} scrollEventThrottle={16}>
         <Details>
           <Description>
             <Brand>{car?.brand}</Brand>
@@ -76,7 +114,7 @@ export function CarDetails() {
         </Accessories>
 
         <About>{car?.about}</About>
-      </Content>
+      </ScrollAnimanted>
 
       <Footer>
         <Button

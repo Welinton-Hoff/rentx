@@ -1,5 +1,5 @@
-import { ScrollView } from "react-native";
 import styled from "styled-components/native";
+import Animated from "react-native-reanimated";
 import { RFValue } from "react-native-responsive-fontsize";
 import {
   getBottomSpace,
@@ -8,6 +8,13 @@ import {
 
 export const Container = styled.View`
   flex: 1;
+  background-color: ${({ theme }) => theme.colors.background_secudanry};
+`;
+
+export const HeaderAnimated = styled(Animated.View).attrs({})`
+  z-index: 1;
+  overflow: hidden;
+  position: absolute;
   background-color: ${({ theme }) => theme.colors.background_secudanry};
 `;
 
@@ -21,7 +28,7 @@ export const Header = styled.View`
   margin-top: ${getStatusBarHeight() + 18}px;
 `;
 
-export const CarImages = styled.View`
+export const CarAnimatedImages = styled(Animated.View)`
   margin-top: ${getStatusBarHeight() + 32}px;
 `;
 
@@ -47,10 +54,11 @@ export const Period = styled.Text`
   font-family: ${({ theme }) => theme.fonts.secudanry_500};
 `;
 
-export const Content = styled(ScrollView).attrs({
+export const ScrollAnimanted = styled(Animated.ScrollView).attrs({
   contentContainerStyle: {
-    padding: 24,
     alignItens: "center",
+    paddingHorizontal: 24,
+    paddingTop: getStatusBarHeight() + 160,
   },
   showsVerticalScrollIndicator: false,
 })``;

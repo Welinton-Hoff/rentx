@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 import api from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
-import { getPlatformDate } from "../../utils/getPlatformDate";
+import { getPlatformDate } from "../../utils/Date";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 import { Slider } from "../../components/Slider";

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { ListRenderItem, ViewToken } from "react-native";
+import { widthPercentageToDP } from "../../utils/Resolution";
 
 import {
   CarImage,
@@ -48,8 +49,10 @@ export function Slider(props: SliderProps) {
       <ImageList
         horizontal
         data={imagesUrl}
+        decelerationRate={0}
         renderItem={renderItem}
         keyExtractor={(key) => key}
+        snapToInterval={widthPercentageToDP("100")}
         onViewableItemsChanged={indexChanged.current}
       />
     </Container>

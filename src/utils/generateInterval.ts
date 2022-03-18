@@ -1,7 +1,8 @@
 import { eachDayOfInterval, format } from "date-fns";
 
 import theme from "../styles/theme";
-import { getPlatformDate } from "./getPlatformDate";
+import { getPlatformDate } from "./Date";
+
 import { MarkedDateSchema, DayProps } from "../components/Calendar";
 
 function generateInterval(start: DayProps, end: DayProps) {

@@ -4,7 +4,8 @@ import { Alert, StatusBar } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { CarDTO } from "../../dtos/CarDTO";
-import { getPlatformDate } from "../../utils/getPlatformDate";
+
+import { getPlatformDate } from "../../utils/Date";
 import { generateInterval } from "../../utils/generateInterval";
 
 import ArrowSvg from "../../assets/arrow.svg";

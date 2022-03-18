@@ -9,8 +9,8 @@ https://www.figma.com/file/ueGmRhQQg1rPMOewMUUJS7/RentX-Ignite?node-id=0%3A1
 <br />
 TECNOLOGIAS UTILIZADAS:<br /><br />
 Expo<br />
+Lottie<br />
 Axios<br />
-Animations<br />
 Typescript<br />
 Json-server<br />
 Styled-components<br />

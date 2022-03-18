@@ -1,7 +1,10 @@
-import { FlatList } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
+import Animated from "react-native-reanimated";
+import { FlatList, TouchableOpacity } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+
+const ButtonAnimated = Animated.createAnimatedComponent(TouchableOpacity);
 
 import Logo from "../../assets/logo.svg";
 
@@ -46,18 +49,22 @@ export const CarList = styled(FlatList).attrs({
   showVerticalScrollIndicator: false,
 })`` as unknown as typeof FlatList;
 
-export const MyCarsButton = styled.TouchableOpacity.attrs({
+export const AnimatedView = styled(Animated.View)`
+  position: absolute;
+
+  right: 22px;
+  bottom: 13px;
+`;
+
+export const MyCarsButton = styled(ButtonAnimated).attrs({
   activeOpacity: 0.7,
 })`
   width: ${RFValue(60)}px;
   height: ${RFValue(60)}px;
 
-  position: absolute;
   align-items: center;
   justify-content: center;
 
-  right: 22px;
-  bottom: 13px;
   border-radius: 30px;
   background-color: ${({ theme }) => theme.colors.main};
 `;

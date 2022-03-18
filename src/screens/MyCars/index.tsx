@@ -6,7 +6,7 @@ import api from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
 
 import { CarCard } from "../../components/CarCard";
-import { LoadView } from "../../components/LoadView";
+import { LoaderAnimated } from "../../components/LoaderAnimated";
 
 import {
   Title,
@@ -51,7 +51,7 @@ export function MyCars() {
 
   const HasContent = () => {
     if (isLoading) {
-      return <LoadView />;
+      return <LoaderAnimated />;
     }
 
     return (
@@ -78,7 +78,9 @@ export function MyCars() {
       } catch (error) {
         console.log(error.message);
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
       }
     };
 

@@ -1,11 +1,18 @@
-import { ListRenderItem, StatusBar } from "react-native";
+import {
+  withSpring,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedGestureHandler,
+} from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
+import { PanGestureHandler } from "react-native-gesture-handler";
+import { ListRenderItem, StatusBar, BackHandler } from "react-native";
 
 import api from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
 import { CarCard } from "../../components/CarCard";
-import { LoadView } from "../../components/LoadView";
+import { LoaderAnimated } from "../../components/LoaderAnimated";
 
 import {
   Header,
@@ -15,13 +22,41 @@ import {
   Container,
   TotalCars,
   MyCarsButton,
+  AnimatedView,
   HeaderContent,
 } from "./styles";
 
 export function Home() {
   const navigation = useNavigation();
+  const positionY = useSharedValue(0);
+  const positionX = useSharedValue(0);
+
   const [isLoading, setLoading] = useState(true);
   const [carData, setCarData] = useState<CarDTO[]>([]);
+
+  const myCarsButtonStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: positionX.value },
+        { translateY: positionY.value },
+      ],
+    };
+  });
+
+  const onGestureEvent = useAnimatedGestureHandler({
+    onStart(_, ctx: any) {
+      ctx.positionX = positionX.value;
+      ctx.positionY = positionY.value;
+    },
+    onActive(event, ctx: any) {
+      positionX.value = ctx.positionX + event.translationX;
+      positionY.value = ctx.positionY + event.translationY;
+    },
+    onEnd() {
+      positionX.value = withSpring(0);
+      positionY.value = withSpring(0);
+    },
+  });
 
   const handleCarDetails = (car: CarDTO) => {
     navigation.navigate("CarDetails", { car });
@@ -39,9 +74,9 @@ export function Home() {
     [carData]
   );
 
-  const ApiResponse = () => {
+  const FetchCars = () => {
     if (isLoading) {
-      return <LoadView />;
+      return <LoaderAnimated />;
     }
 
     return (
@@ -53,6 +88,14 @@ export function Home() {
     );
   };
 
+  const CountCars = () => {
+    if (isLoading) {
+      return null;
+    }
+
+    return <TotalCars>Total de {carData?.length} carros</TotalCars>;
+  };
+
   useEffect(() => {
     async function fetchCars() {
       try {
@@ -61,11 +104,19 @@ export function Home() {
       } catch (error) {
         console.log("error ==> ", error.message);
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       }
     }
 
     fetchCars();
+  }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      return true;
+    });
   }, []);
 
   return (
@@ -75,18 +126,23 @@ export function Home() {
         barStyle="light-content"
         backgroundColor="transparent"
       />
+
       <Header>
         <HeaderContent>
           <RentxLogo />
-          <TotalCars>Total de {carData?.length} carros</TotalCars>
+          <CountCars />
         </HeaderContent>
       </Header>
 
-      <ApiResponse />
+      <FetchCars />
 
-      <MyCarsButton onPress={handleOpenMyCars}>
-        <CarIcon />
-      </MyCarsButton>
+      <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <AnimatedView style={myCarsButtonStyle}>
+          <MyCarsButton onPress={handleOpenMyCars}>
+            <CarIcon />
+          </MyCarsButton>
+        </AnimatedView>
+      </PanGestureHandler>
     </Container>
   );
 }

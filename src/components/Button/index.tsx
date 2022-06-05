@@ -13,6 +13,7 @@ interface ButtonProps extends TouchableOpacityProps {
 
 export function Button(props: ButtonProps) {
   const theme = useTheme();
+
   const {
     title,
     isLoading = false,

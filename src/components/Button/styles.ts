@@ -7,6 +7,10 @@ interface ContainerProps {
   opacity: number;
 }
 
+interface TitleStyle {
+  color: string;
+}
+
 export const Container = styled.TouchableOpacity<ContainerProps>`
   width: 100%;
   align-items: center;
@@ -16,9 +20,9 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
   opacity: ${({ opacity }) => opacity};
 `;
 
-export const Title = styled.Text`
+export const Title = styled.Text<TitleStyle>`
   font-size: ${RFValue(15)}px;
-  color: ${({ theme }) => theme.colors.shape};
+  color: ${({ color }) => color};
   font-family: ${({ theme }) => theme.fonts.primary_500};
 `;
 

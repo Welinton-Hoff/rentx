@@ -7,6 +7,7 @@ import { Title, Container, LoadIndicator } from "./styles";
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
   color?: string;
+  textColor?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
 }
@@ -19,6 +20,7 @@ export function Button(props: ButtonProps) {
     isLoading = false,
     isDisabled = false,
     color = theme.colors.main,
+    textColor = theme.colors.shape,
     ...rest
   } = props;
 
@@ -29,7 +31,7 @@ export function Button(props: ButtonProps) {
       return <LoadIndicator />;
     }
 
-    return <Title>{title}</Title>;
+    return <Title color={textColor}>{title}</Title>;
   };
 
   return (

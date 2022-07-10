@@ -1,11 +1,27 @@
 import { Feather } from "@expo/vector-icons";
-import styled from "styled-components/native";
+import styled, { css, DefaultTheme } from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
 
-export const InputView = styled.View`
+interface IconProps {
+  theme: DefaultTheme;
+  isFieldFocused: boolean;
+}
+
+interface InputViewProps {
+  isFieldFocused: boolean;
+}
+
+export const InputView = styled.View<InputViewProps>`
   width: 100%;
   margin: 8px 0;
   flex-direction: row;
+
+  ${({ theme, isFieldFocused }) =>
+    isFieldFocused &&
+    css`
+      border-bottom-width: 2px;
+      border-bottom-color: ${theme.colors.main};
+    `}
 `;
 
 export const IconView = styled.View`
@@ -17,10 +33,12 @@ export const IconView = styled.View`
   background-color: ${({ theme }) => theme.colors.background_secudanry};
 `;
 
-export const Icon = styled(Feather).attrs(({ theme }) => ({
-  size: 24,
-  color: theme.colors.text_detail,
-}))``;
+export const Icon = styled(Feather).attrs(
+  ({ theme, isFieldFocused }: IconProps) => ({
+    size: 24,
+    color: isFieldFocused ? theme.colors.main : theme.colors.text_detail,
+  })
+)``;
 
 export const Field = styled.TextInput.attrs({})`
   flex: 1;

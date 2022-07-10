@@ -5,30 +5,48 @@ import { TextInputProps } from "react-native";
 import { Icon, Field, IconView, InputView, PasswordVisibility } from "./styles";
 
 interface InputProps extends TextInputProps {
+  value?: string;
   isPassword?: boolean;
   icon: React.ComponentProps<typeof Feather>["name"];
 }
 
 export function Input(props: InputProps) {
+  const [isFilled, setIsFilled] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, enablePasswordVisibility] = useState(true);
-  const { icon, isPassword = false, ...rest } = props;
 
-  function handlePasswordVisibility() {
-    enablePasswordVisibility(!isPasswordVisible);
-  }
+  const { icon, value, isPassword = false, ...rest } = props;
 
   function passwordVisibleIcon() {
     return isPasswordVisible ? "eye" : "eye-off";
   }
 
+  function handlePasswordVisibility() {
+    enablePasswordVisibility(!isPasswordVisible);
+  }
+
+  function handleIsFieldFocused(): void {
+    setIsFocused(true);
+  }
+
+  function handleFieldOnBlur(): void {
+    setIsFocused(false);
+    setIsFilled(!!value);
+  }
+
   if (isPassword) {
     return (
-      <InputView>
+      <InputView isFieldFocused={isFocused}>
         <IconView>
-          <Icon name={icon} />
+          <Icon name={icon} isFieldFocused={isFocused || isFilled} />
         </IconView>
 
-        <Field {...rest} secureTextEntry={isPasswordVisible} />
+        <Field
+          {...rest}
+          onBlur={handleFieldOnBlur}
+          onFocus={handleIsFieldFocused}
+          secureTextEntry={isPasswordVisible}
+        />
 
         <PasswordVisibility onPress={handlePasswordVisibility}>
           <IconView>
@@ -40,12 +58,16 @@ export function Input(props: InputProps) {
   }
 
   return (
-    <InputView>
+    <InputView isFieldFocused={isFocused}>
       <IconView>
-        <Icon name={icon} />
+        <Icon name={icon} isFieldFocused={isFocused || isFilled} />
       </IconView>
 
-      <Field {...rest} />
+      <Field
+        {...rest}
+        onBlur={handleFieldOnBlur}
+        onFocus={handleIsFieldFocused}
+      />
     </InputView>
   );
 }

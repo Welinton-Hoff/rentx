@@ -8,6 +8,7 @@ import {
   Inter_500Medium,
   Inter_400Regular,
 } from "@expo-google-fonts/inter";
+
 import {
   Archivo_500Medium,
   Archivo_400Regular,

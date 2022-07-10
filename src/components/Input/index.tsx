@@ -36,7 +36,7 @@ export function Input(props: InputProps) {
 
   if (isPassword) {
     return (
-      <InputView isFieldFocused={isFocused}>
+      <InputView>
         <IconView>
           <Icon name={icon} isFieldFocused={isFocused || isFilled} />
         </IconView>
@@ -44,6 +44,7 @@ export function Input(props: InputProps) {
         <Field
           {...rest}
           onBlur={handleFieldOnBlur}
+          isFieldFocused={isFocused}
           onFocus={handleIsFieldFocused}
           secureTextEntry={isPasswordVisible}
         />
@@ -58,13 +59,14 @@ export function Input(props: InputProps) {
   }
 
   return (
-    <InputView isFieldFocused={isFocused}>
+    <InputView>
       <IconView>
         <Icon name={icon} isFieldFocused={isFocused || isFilled} />
       </IconView>
 
       <Field
         {...rest}
+        isFieldFocused={isFocused}
         onBlur={handleFieldOnBlur}
         onFocus={handleIsFieldFocused}
       />

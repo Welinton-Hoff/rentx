@@ -7,21 +7,14 @@ interface IconProps {
   isFieldFocused: boolean;
 }
 
-interface InputViewProps {
+interface FieldProps {
   isFieldFocused: boolean;
 }
 
-export const InputView = styled.View<InputViewProps>`
+export const InputView = styled.View`
   width: 100%;
   margin: 8px 0;
   flex-direction: row;
-
-  ${({ theme, isFieldFocused }) =>
-    isFieldFocused &&
-    css`
-      border-bottom-width: 2px;
-      border-bottom-color: ${theme.colors.main};
-    `}
 `;
 
 export const IconView = styled.View`
@@ -40,13 +33,20 @@ export const Icon = styled(Feather).attrs(
   })
 )``;
 
-export const Field = styled.TextInput.attrs({})`
+export const Field = styled.TextInput<FieldProps>`
   flex: 1;
   padding: 0 23px;
   font-size: ${RFValue(15)}px;
   color: ${({ theme }) => theme.colors.text};
   font-family: ${({ theme }) => theme.fonts.primary_400};
   background-color: ${({ theme }) => theme.colors.background_secudanry};
+
+  ${({ theme, isFieldFocused }) =>
+    isFieldFocused &&
+    css`
+      border-bottom-width: 2px;
+      border-bottom-color: ${theme.colors.main};
+    `}
 `;
 
 export const PasswordVisibility = styled.TouchableOpacity.attrs({

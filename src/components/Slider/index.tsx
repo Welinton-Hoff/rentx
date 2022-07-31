@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
 import { ListRenderItem, ViewToken } from "react-native";
+
 import { widthPercentageToDP } from "../../utils/Resolution";
+import { PaginationIndicator } from "../PaginationIndicator";
 
 import {
   CarImage,
   Container,
   ImageList,
-  ImageIndex,
   ImageIndexes,
   CarImageWrapper,
 } from "./styles";
@@ -42,7 +43,10 @@ export function Slider(props: SliderProps) {
     <Container>
       <ImageIndexes>
         {imagesUrl.map((_, index) => (
-          <ImageIndex key={String(index)} isActive={index === imageIdex} />
+          <PaginationIndicator
+            key={String(index)}
+            isActive={index === imageIdex}
+          />
         ))}
       </ImageIndexes>
 

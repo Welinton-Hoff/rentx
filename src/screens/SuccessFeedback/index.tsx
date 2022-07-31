@@ -1,6 +1,6 @@
 import React from "react";
 import { StatusBar } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { ConfirmButton } from "../../components/ConfirmButton";
 
@@ -14,11 +14,20 @@ import {
   Container,
 } from "./styles";
 
-export function SchedulingComplete() {
+interface SuccessFeedbackProps {
+  title: string;
+  message: string;
+  navigateToNextRoute: keyof ReactNavigation.RootParamList;
+}
+
+export function SuccessFeedback() {
+  const route = useRoute();
   const navigation = useNavigation();
+  const { title, message, navigateToNextRoute } =
+    route.params as SuccessFeedbackProps;
 
   const handleRentalComplete = () => {
-    navigation.navigate("Home");
+    navigation.navigate(navigateToNextRoute);
   };
 
   return (
@@ -28,19 +37,11 @@ export function SchedulingComplete() {
         barStyle="light-content"
         backgroundColor="transparent"
       />
-
       <LogoSvg />
-
       <Content>
         <DoneSvg />
-        <Title>Carro alugado!</Title>
-
-        <Message>
-          Agora você só precisa ir {"\n"}
-          até a concessionária da RENTX {"\n"}
-          pegar o seu automóvel.
-        </Message>
-
+        <Title>{title}</Title>
+        <Message>{message}</Message>
         <Footer>
           <ConfirmButton title="Ok" onPress={handleRentalComplete} />
         </Footer>

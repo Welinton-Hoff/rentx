@@ -62,7 +62,19 @@ export function SchedulingDetails() {
   const { car, dates } = route.params as ParamsSchema;
   const rentTotal = Number(dates.length * car.rent.price);
 
-  const handleConfirmRental = async () => {
+  function handleGoBackScheduling(): void {
+    navigation.goBack();
+  }
+
+  function onNavigateSuccessFeedback(): void {
+    navigation.navigate("SuccessFeedback", {
+      title: "Carro alugado!",
+      navigateToNextRoute: "Home",
+      message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar o seu automóvel.`,
+    });
+  }
+
+  async function handleConfirmRental(): Promise<void> {
     try {
       setScheduling(true);
 
@@ -85,16 +97,12 @@ export function SchedulingDetails() {
       });
 
       if (scheduleCar.status === 200 && scheduleCarByUser.status === 201) {
-        return navigation.navigate("SchedulingComplete");
+        return onNavigateSuccessFeedback();
       }
     } catch (error) {
       Alert.alert("Agendamento", "Não foi possível confirmar o agendamento.");
     }
-  };
-
-  const handleGoBackScheduling = () => {
-    navigation.goBack();
-  };
+  }
 
   useEffect(() => {
     const startDate = format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy");

@@ -1,10 +1,13 @@
-import React, { useState } from "react";
 import {
+  Alert,
   Keyboard,
   StatusBar,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from "react-native";
+import * as Yup from "yup";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import { Input } from "../../components/Input";
 
@@ -19,9 +22,41 @@ import {
   CreateAccountButton,
 } from "./styles";
 
-export function Signin() {
+export function SignIn() {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  async function onSignIn(): Promise<void> {
+    try {
+      const schema = Yup.object().shape({
+        email: Yup.string()
+          .required("E-mail obrigatório")
+          .email("Digite um e-mail"),
+        password: Yup.string().required("Senha obrigatória"),
+      });
+
+      await schema.validate({ email, password });
+    } catch (error: unknown | Yup.ValidationError) {
+      getAutenticationError(error);
+    }
+  }
+
+  function onCreateNewAccount(): void {
+    navigation.navigate("InitialData");
+  }
+
+  function getAutenticationError(error: unknown | Yup.ValidationError) {
+    if (error instanceof Yup.ValidationError) {
+      return Alert.alert("Ops!", error.message);
+    }
+
+    return Alert.alert(
+      "Ops!",
+      "Erro na autenticação, verifique as credencias."
+    );
+  }
 
   return (
     <KeyboardAvoidingView enabled behavior="position">
@@ -35,7 +70,6 @@ export function Signin() {
 
           <Header>
             <Title>Estamos{"\n"}quase lá.</Title>
-
             <SubTitle>
               Faça o seu login para começar{"\n"}
               uma experiência incrível.
@@ -68,13 +102,13 @@ export function Signin() {
             <LoginButton
               isLoading={false}
               isDisabled={false}
-              onPress={() => {}}
+              onPress={onSignIn}
             />
 
             <CreateAccountButton
               isLoading={false}
               isDisabled={false}
-              onPress={() => {}}
+              onPress={onCreateNewAccount}
             />
           </Footer>
         </Container>

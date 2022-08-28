@@ -58,13 +58,20 @@ export function CreatePassword() {
     }
 
     await api
-      .post("/user", {
+      .post("/users", {
         password,
         name: userData.name,
         email: userData.email,
         driverLicense: userData.driverLicense,
       })
-      .then(() => onNavigateSuccessFeedback());
+      .then(() => onNavigateSuccessFeedback())
+      .catch((error: any) => {
+        console.log("error => ", error.message);
+        Alert.alert(
+          "Ops",
+          "Algo de inesperado ocorreu, por favor tente novamente mais tarde."
+        );
+      });
   }
 
   return (

@@ -7,6 +7,7 @@ import {
 import React, { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
+import api from "../../../services/api";
 import { userDataSchema } from "../InitialData";
 import { Input } from "../../../components/Input";
 import { BackButton } from "../../../components/BackButton";
@@ -47,7 +48,7 @@ export function CreatePassword() {
     });
   }
 
-  function onRegister(): void {
+  async function onRegister(): Promise<void> {
     if (!password || !confirmPassword) {
       return Alert.alert("Informe a senha e confirme-a.");
     }
@@ -56,9 +57,14 @@ export function CreatePassword() {
       return Alert.alert("Por favor, revise sua senha.");
     }
 
-    // send userData to API
-
-    onNavigateSuccessFeedback();
+    await api
+      .post("/user", {
+        password,
+        name: userData.name,
+        email: userData.email,
+        driverLicense: userData.driverLicense,
+      })
+      .then(() => onNavigateSuccessFeedback());
   }
 
   return (

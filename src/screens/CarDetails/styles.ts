@@ -54,7 +54,7 @@ export const Period = styled.Text`
   font-family: ${({ theme }) => theme.fonts.secudanry_500};
 `;
 
-export const ScrollAnimanted = styled(Animated.ScrollView).attrs({
+export const ScrollAnimated = styled(Animated.ScrollView).attrs({
   contentContainerStyle: {
     alignItens: "center",
     paddingHorizontal: 24,

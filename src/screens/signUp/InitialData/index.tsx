@@ -56,11 +56,11 @@ export function InitialData() {
       await schema.validate(userData);
       onCreatePasswordPage(userData);
     } catch (error: unknown | Yup.ValidationError) {
-      getAutenticationError(error);
+      getAuthenticationError(error);
     }
   }
 
-  function getAutenticationError(error: unknown | Yup.ValidationError) {
+  function getAuthenticationError(error: unknown | Yup.ValidationError) {
     if (error instanceof Yup.ValidationError) {
       return Alert.alert("Ops!", error.message);
     }

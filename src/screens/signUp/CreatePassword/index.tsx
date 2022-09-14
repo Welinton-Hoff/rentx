@@ -36,18 +36,6 @@ export function CreatePassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  function onGoBackNavigate(): void {
-    navigation.goBack();
-  }
-
-  function onNavigateSuccessFeedback(): void {
-    navigation.navigate("SuccessFeedback", {
-      title: "Conta criada!",
-      navigateToNextRoute: "SignIn",
-      message: `Agora é so fazer login\ne aproveitar.`,
-    });
-  }
-
   async function onRegister(): Promise<void> {
     if (!password || !confirmPassword) {
       return Alert.alert("Informe a senha e confirme-a.");
@@ -62,16 +50,29 @@ export function CreatePassword() {
         password,
         name: userData.name,
         email: userData.email,
-        driverLicense: userData.driverLicense,
+        driver_license: userData.driverLicense,
       })
       .then(() => onNavigateSuccessFeedback())
-      .catch((error: any) => {
-        console.log("error => ", error.message);
-        Alert.alert(
-          "Ops",
-          "Algo de inesperado ocorreu, por favor tente novamente mais tarde."
-        );
-      });
+      .catch(() => handleFailureFeedback());
+  }
+
+  function onGoBackNavigate(): void {
+    navigation.goBack();
+  }
+
+  function onNavigateSuccessFeedback(): void {
+    navigation.navigate("SuccessFeedback", {
+      title: "Conta criada!",
+      navigateToNextRoute: "SignIn",
+      message: `Agora é so fazer login\ne aproveitar.`,
+    });
+  }
+
+  function handleFailureFeedback(): void {
+    Alert.alert(
+      "Ops",
+      "Algo de inesperado ocorreu, por favor tente novamente mais tarde."
+    );
   }
 
   return (

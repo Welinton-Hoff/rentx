@@ -30,7 +30,7 @@ import {
   Description,
   Accessories,
   HeaderAnimated,
-  ScrollAnimanted,
+  ScrollAnimated,
   CarAnimatedImages,
 } from "./styles";
 
@@ -90,7 +90,7 @@ export function CarDetails() {
         </CarAnimatedImages>
       </HeaderAnimated>
 
-      <ScrollAnimanted onScroll={scrollHandler} scrollEventThrottle={16}>
+      <ScrollAnimated onScroll={scrollHandler} scrollEventThrottle={16}>
         <Details>
           <Description>
             <Brand>{car?.brand}</Brand>
@@ -98,8 +98,8 @@ export function CarDetails() {
           </Description>
 
           <Rent>
-            <Period>{car?.rent.period}</Period>
-            <Price>R$ {car?.rent.price}</Price>
+            <Period>{car?.period}</Period>
+            <Price>R$ {car?.price}</Price>
           </Rent>
         </Details>
 
@@ -114,7 +114,7 @@ export function CarDetails() {
         </Accessories>
 
         <About>{car?.about}</About>
-      </ScrollAnimanted>
+      </ScrollAnimated>
 
       <Footer>
         <Button

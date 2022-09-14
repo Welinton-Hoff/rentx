@@ -12,11 +12,15 @@ import {
   CarImageWrapper,
 } from "./styles";
 
+interface ImageSchema {
+  id: string;
+  photo: string;
+}
 interface SliderProps {
-  imagesUrl: string[];
+  imagesUrl: ImageSchema[];
 }
 
-interface ChandeImageProps {
+interface ChangeImageProps {
   changed: ViewToken[];
   viewableItems: ViewToken[];
 }
@@ -26,15 +30,15 @@ export function Slider(props: SliderProps) {
 
   const [imageIdex, setImageIndex] = useState(0);
 
-  const indexChanged = useRef((info: ChandeImageProps) => {
+  const indexChanged = useRef((info: ChangeImageProps) => {
     const index = info.viewableItems[0].index!;
     setImageIndex(index);
   });
 
-  const renderItem: ListRenderItem<string> = ({ item }) => {
+  const renderItem: ListRenderItem<ImageSchema> = ({ item }) => {
     return (
       <CarImageWrapper>
-        <CarImage source={{ uri: item }} resizeMode="contain" />
+        <CarImage source={{ uri: item.photo }} resizeMode="contain" />
       </CarImageWrapper>
     );
   };
@@ -55,7 +59,7 @@ export function Slider(props: SliderProps) {
         data={imagesUrl}
         decelerationRate={0}
         renderItem={renderItem}
-        keyExtractor={(key) => key}
+        keyExtractor={(item) => item.id}
         snapToInterval={widthPercentageToDP("100")}
         onViewableItemsChanged={indexChanged.current}
       />

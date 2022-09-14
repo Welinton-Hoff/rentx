@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
+import { useAuth } from "../../hooks/Auth";
 import { Input } from "../../components/Input";
 
 import {
@@ -23,6 +24,7 @@ import {
 } from "./styles";
 
 export function SignIn() {
+  const { signIn } = useAuth();
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
@@ -38,8 +40,10 @@ export function SignIn() {
       });
 
       await schema.validate({ email, password });
+
+      signIn({ email, password });
     } catch (error: unknown | Yup.ValidationError) {
-      getAutenticationError(error);
+      getAuthenticationError(error);
     }
   }
 
@@ -47,7 +51,7 @@ export function SignIn() {
     navigation.navigate("InitialData");
   }
 
-  function getAutenticationError(error: unknown | Yup.ValidationError) {
+  function getAuthenticationError(error: unknown | Yup.ValidationError) {
     if (error instanceof Yup.ValidationError) {
       return Alert.alert("Ops!", error.message);
     }

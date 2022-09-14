@@ -5,9 +5,9 @@ import {
   useAnimatedGestureHandler,
 } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
+import { ListRenderItem, StatusBar } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import { ListRenderItem, StatusBar, BackHandler } from "react-native";
 
 import api from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
@@ -113,12 +113,6 @@ export function Home() {
     fetchCars();
   }, []);
 
-  useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      return true;
-    });
-  }, []);
-
   return (
     <Container>
       <StatusBar
@@ -136,6 +130,7 @@ export function Home() {
 
       <FetchCars />
 
+      {/* Keep this button here for example and didactic questions */}
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedView style={myCarsButtonStyle}>
           <MyCarsButton onPress={handleOpenMyCars}>

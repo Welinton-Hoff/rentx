@@ -1,12 +1,24 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { StackRoutes } from "./stack.routes";
+import { useAuth } from "../hooks/Auth";
+import { AuthRoutes } from "./auth.routes";
+import { AppTabRoutes } from "./app.tab.routes";
 
 export function Routes() {
+  const { user } = useAuth();
+
+  if (user) {
+    return (
+      <NavigationContainer>
+        <AppTabRoutes />
+      </NavigationContainer>
+    );
+  }
+
   return (
     <NavigationContainer>
-      <StackRoutes />
+      <AuthRoutes />
     </NavigationContainer>
   );
 }

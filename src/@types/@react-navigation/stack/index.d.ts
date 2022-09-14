@@ -1,7 +1,7 @@
 declare namespace ReactNavigation {
   export interface RootParamList extends RootStackParamList {
     Home: NavigationStackProp<string>;
-    Signin: NavigationStackProp<string>;
+    SignIn: NavigationStackProp<string>;
     MyCars: NavigationStackProp<string>;
     CarDetails: NavigationStackProp<string>;
     Scheduling: NavigationStackProp<string>;

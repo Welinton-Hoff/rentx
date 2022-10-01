@@ -1,4 +1,7 @@
 import React from "react";
+import { StatusBar } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
 import {
   Extrapolate,
   interpolate,
@@ -6,8 +9,6 @@ import {
   useAnimatedStyle,
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
-import { StatusBar } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { CarDTO } from "../../dtos/CarDTO";
 import { Slider } from "../../components/Slider";
@@ -43,6 +44,7 @@ export function CarDetails() {
   const scrollY = useSharedValue(0);
   const navigation = useNavigation();
   const { car } = route.params as ParamsSchema;
+
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y;
   });
@@ -64,13 +66,13 @@ export function CarDetails() {
     };
   });
 
-  const handleConfirmRental = () => {
+  function handleConfirmRental(): void {
     navigation.navigate("Scheduling", { car });
-  };
+  }
 
-  const handleGoBackHome = () => {
+  function handleGoBackHome(): void {
     navigation.goBack();
-  };
+  }
 
   return (
     <Container>

@@ -26,9 +26,9 @@ export function SuccessFeedback() {
   const { title, message, navigateToNextRoute } =
     route.params as SuccessFeedbackProps;
 
-  const handleRentalComplete = () => {
+  function handleRentalComplete(): void {
     navigation.navigate(navigateToNextRoute);
-  };
+  }
 
   return (
     <Container>

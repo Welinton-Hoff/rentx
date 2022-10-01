@@ -8,13 +8,13 @@ import { CarDTO } from "../../dtos/CarDTO";
 import { getPlatformDate } from "../../utils/Date";
 import { generateInterval } from "../../utils/generateInterval";
 
-import ArrowSvg from "../../assets/arrow.svg";
-import { Button } from "../../components/Button";
 import {
   Calendar,
   DayProps,
   MarkedDateSchema,
 } from "../../components/Calendar";
+import ArrowSvg from "../../assets/arrow.svg";
+import { Button } from "../../components/Button";
 
 import {
   Header,
@@ -53,18 +53,18 @@ export function Scheduling() {
     {} as DayProps
   );
 
-  const handleSchedulingDetails = () => {
+  function handleSchedulingDetails(): void {
     navigation.navigate("SchedulingDetails", {
       car,
       dates: Object.keys(markedDates),
     });
-  };
+  }
 
-  const handleGoBackCarDetails = () => {
+  function handleGoBackCarDetails(): void {
     navigation.goBack();
-  };
+  }
 
-  const handleChangeDate = (date: DayProps) => {
+  function handleChangeDate(date: DayProps): void {
     let start = !lastSelectedDate.timestamp ? date : lastSelectedDate;
     let end = date;
 
@@ -88,7 +88,7 @@ export function Scheduling() {
         "dd/MM/yyyy"
       ),
     });
-  };
+  }
 
   return (
     <Container>

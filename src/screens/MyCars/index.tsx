@@ -21,7 +21,7 @@ import {
   AppointmentsQuantity,
 } from "./styles";
 
-interface CarShema {
+interface CarSchema {
   id: string;
   car: CarDTO;
   user_id: string;
@@ -33,13 +33,30 @@ export function MyCars() {
   const navigation = useNavigation();
 
   const [isLoading, setLoading] = useState(true);
-  const [cars, setCars] = useState<CarShema[]>([]);
+  const [cars, setCars] = useState<CarSchema[]>([]);
 
-  const handleBackToHome = () => {
+  useEffect(() => {
+    fetchCars();
+  }, []);
+
+  function handleBackToHome(): void {
     navigation.goBack();
-  };
+  }
 
-  const renderItem: ListRenderItem<CarShema> = ({ item }) => {
+  async function fetchCars(): Promise<void> {
+    try {
+      const response = await api.get("schedules_byuser?user_id=1");
+      setCars(response.data);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
+    }
+  }
+
+  const renderItem: ListRenderItem<CarSchema> = ({ item }) => {
     return (
       <CarCard
         data={item.car}
@@ -69,23 +86,6 @@ export function MyCars() {
       </>
     );
   };
-
-  useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const response = await api.get("schedules_byuser?user_id=1");
-        setCars(response.data);
-      } catch (error) {
-        console.log(error.message);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
-      }
-    };
-
-    fetchCars();
-  }, []);
 
   return (
     <Container>

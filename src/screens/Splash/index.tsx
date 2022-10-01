@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+
 import Animated, {
   runOnJS,
   withTiming,
@@ -9,11 +10,18 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { Container, CustonLogo, CustonBrandSvg } from "./styles";
+import { Container, CustomLogo, CustomBrandSvg } from "./styles";
 
 export function Splash() {
   const navigation = useNavigation();
   const splashAnimation = useSharedValue(0);
+
+  useEffect(() => {
+    splashAnimation.value = withTiming(50, { duration: 2500 }, () => {
+      "worklet";
+      runOnJS(initApp)();
+    });
+  }, []);
 
   const brandStyle = useAnimatedStyle(() => {
     return {
@@ -47,25 +55,18 @@ export function Splash() {
     };
   });
 
-  const initApp = () => {
+  function initApp(): void {
     navigation.navigate("SignIn");
-  };
-
-  useEffect(() => {
-    splashAnimation.value = withTiming(50, { duration: 2500 }, () => {
-      "worklet";
-      runOnJS(initApp)();
-    });
-  }, []);
+  }
 
   return (
     <Container>
       <Animated.View style={[brandStyle, { position: "absolute" }]}>
-        <CustonBrandSvg />
+        <CustomBrandSvg />
       </Animated.View>
 
       <Animated.View style={[logoStyle, { position: "absolute" }]}>
-        <CustonLogo />
+        <CustomLogo />
       </Animated.View>
     </Container>
   );

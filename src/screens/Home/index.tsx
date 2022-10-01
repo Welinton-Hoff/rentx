@@ -34,6 +34,10 @@ export function Home() {
   const [isLoading, setLoading] = useState(true);
   const [carData, setCarData] = useState<CarDTO[]>([]);
 
+  useEffect(() => {
+    fetchCarsForScheduling();
+  }, []);
+
   const myCarsButtonStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -58,13 +62,26 @@ export function Home() {
     },
   });
 
-  const handleCarDetails = (car: CarDTO) => {
+  function handleCarDetails(car: CarDTO): void {
     navigation.navigate("CarDetails", { car });
-  };
+  }
 
-  const handleOpenMyCars = () => {
+  function handleOpenMyCars(): void {
     navigation.navigate("MyCars");
-  };
+  }
+
+  async function fetchCarsForScheduling(): Promise<void> {
+    try {
+      const response = await api.get("/cars");
+      setCarData(response.data);
+    } catch (error) {
+      console.log("error ==> ", error.message);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
+  }
 
   const renderItem: ListRenderItem<CarDTO> = useCallback(
     (props) => {
@@ -74,7 +91,7 @@ export function Home() {
     [carData]
   );
 
-  const FetchCars = () => {
+  const FetchCars = (): JSX.Element => {
     if (isLoading) {
       return <LoaderAnimated />;
     }
@@ -88,30 +105,13 @@ export function Home() {
     );
   };
 
-  const CountCars = () => {
+  const CountCars = (): JSX.Element | null => {
     if (isLoading) {
       return null;
     }
 
     return <TotalCars>Total de {carData?.length} carros</TotalCars>;
   };
-
-  useEffect(() => {
-    async function fetchCars() {
-      try {
-        const response = await api.get("/cars");
-        setCarData(response.data);
-      } catch (error) {
-        console.log("error ==> ", error.message);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      }
-    }
-
-    fetchCars();
-  }, []);
 
   return (
     <Container>

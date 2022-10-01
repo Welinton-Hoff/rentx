@@ -10,12 +10,12 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.header};
 `;
 
-export const CustonLogo = styled(LogoSvg).attrs({
+export const CustomLogo = styled(LogoSvg).attrs({
   width: 180,
   height: 20,
 })``;
 
-export const CustonBrandSvg = styled(BrandSvg).attrs({
+export const CustomBrandSvg = styled(BrandSvg).attrs({
   width: 80,
   height: 50,
 })``;

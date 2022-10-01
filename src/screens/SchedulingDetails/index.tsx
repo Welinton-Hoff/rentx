@@ -62,6 +62,23 @@ export function SchedulingDetails() {
   const { car, dates } = route.params as ParamsSchema;
   const rentTotal = Number(dates.length * car.price);
 
+  useEffect(() => {
+    onRentalPeriod();
+  }, []);
+
+  function onRentalPeriod(): void {
+    const startDate = format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy");
+    const endDate = format(
+      getPlatformDate(new Date(dates[dates.length - 1])),
+      "dd/MM/yyyy"
+    );
+
+    setRentalPeriod({
+      startFormatted: startDate,
+      endFormatted: endDate,
+    });
+  }
+
   function handleGoBackScheduling(): void {
     navigation.goBack();
   }
@@ -103,19 +120,6 @@ export function SchedulingDetails() {
       Alert.alert("Agendamento", "Não foi possível confirmar o agendamento.");
     }
   }
-
-  useEffect(() => {
-    const startDate = format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy");
-    const endDate = format(
-      getPlatformDate(new Date(dates[dates.length - 1])),
-      "dd/MM/yyyy"
-    );
-
-    setRentalPeriod({
-      startFormatted: startDate,
-      endFormatted: endDate,
-    });
-  }, []);
 
   return (
     <Container>

@@ -2,6 +2,7 @@ import React from "react";
 import { ViewStyle } from "react-native";
 import { useTheme } from "styled-components";
 import { Direction, Theme } from "react-native-calendars/src/types";
+
 import {
   LocaleConfig,
   CalendarProps,

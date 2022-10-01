@@ -57,7 +57,7 @@ export function MyCars() {
     return (
       <>
         <Appointments>
-          <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>
+          <AppointmentsTitle>Agendamentos realizados</AppointmentsTitle>
           <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
         </Appointments>
 

@@ -1,4 +1,5 @@
-// Calendar
+// Calendar Config
+
 const ptBR = {
   dayNamesShort: ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"],
   monthNamesShort: [

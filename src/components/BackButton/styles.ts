@@ -1,4 +1,9 @@
 import styled from "styled-components/native";
-import { BorderlessButton } from "react-native-gesture-handler";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export const Container = styled.TouchableOpacity``;
+
+export const LeftIcon = styled(MaterialIcons).attrs({
+  size: 24,
+  name: "chevron-left",
+})``;

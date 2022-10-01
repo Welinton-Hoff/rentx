@@ -15,10 +15,12 @@ function generateInterval(start: DayProps, end: DayProps) {
 
   schedulingInterval.forEach((item) => {
     const date = format(getPlatformDate(item), "yyyy-MM-dd");
+
     const dateColor =
       start.dateString === date || end.dateString === date
         ? theme.colors.main
         : theme.colors.main_light;
+
     const dateTextColor =
       start.dateString === date || end.dateString === date
         ? theme.colors.main_light

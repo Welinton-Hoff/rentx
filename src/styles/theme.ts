@@ -6,17 +6,15 @@ export default {
     background_secudanry: "#FFFFFF",
 
     text: "#7A7A80",
-    text_detail: "#AEAEB3",
-    title: "#47474D",
-
     line: "#EBEBF0",
+    title: "#47474D",
+    shape: "#E1E1E8",
+    main_light: "#FDEDEF",
+    text_detail: "#AEAEB3",
+    shape_dark: "#29292E",
 
     main: "#DC1637",
-    main_light: "#FDEDEF",
     success: "#03B252",
-
-    shape: "#E1E1E8",
-    shape_dark: "#29292E",
   },
 
   fonts: {

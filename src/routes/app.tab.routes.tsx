@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Home } from "../screens/Home";
 import { MyCars } from "../screens/MyCars";
+import { Profile } from "../screens/Profile";
 
 import { useTheme } from "styled-components";
 import { AppStackRoutes } from "./app.stack.routes";
@@ -57,7 +58,7 @@ export function AppTabRoutes() {
 
       <Screen
         name="Profile"
-        component={Home}
+        component={Profile}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon tabName="Profile" color={color} />

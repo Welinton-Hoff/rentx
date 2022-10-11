@@ -8,17 +8,9 @@ import { AppTabRoutes } from "./app.tab.routes";
 export function Routes() {
   const { user } = useAuth();
 
-  if (user) {
-    return (
-      <NavigationContainer>
-        <AppTabRoutes />
-      </NavigationContainer>
-    );
-  }
-
   return (
     <NavigationContainer>
-      <AuthRoutes />
+      {user.id ? <AppTabRoutes /> : <AuthRoutes />}
     </NavigationContainer>
   );
 }

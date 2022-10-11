@@ -35,7 +35,29 @@ export function Home() {
   const [carData, setCarData] = useState<CarDTO[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
+
+    async function fetchCarsForScheduling(): Promise<void> {
+      try {
+        const response = await api.get("/cars");
+
+        if (isMounted) {
+          setCarData(response.data);
+        }
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
     fetchCarsForScheduling();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const myCarsButtonStyle = useAnimatedStyle(() => {
@@ -68,19 +90,6 @@ export function Home() {
 
   function handleOpenMyCars(): void {
     navigation.navigate("MyCars");
-  }
-
-  async function fetchCarsForScheduling(): Promise<void> {
-    try {
-      const response = await api.get("/cars");
-      setCarData(response.data);
-    } catch (error) {
-      console.log("error ==> ", error.message);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-    }
   }
 
   const renderItem: ListRenderItem<CarDTO> = useCallback(

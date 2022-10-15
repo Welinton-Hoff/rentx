@@ -1,13 +1,19 @@
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from "react-native";
+
 import React, { useState } from "react";
+import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 
+import { useAuth } from "../../hooks/Auth";
 import { SectionsField } from "./SectionsField";
+import { ModalFeedback } from "../../components/ModalFeedback";
 
 import {
   Photo,
@@ -30,18 +36,39 @@ import {
 export type OptionSchema = "dataEdit" | "passwordEdit";
 
 export function Profile() {
-  const [option, setOption] = useState<OptionSchema>("dataEdit");
-
   const navigation = useNavigation();
+  const { user, signOut } = useAuth();
 
-  function handleBack() {
+  const [avatar, setAvatar] = useState(user.avatar);
+  const [option, setOption] = useState<OptionSchema>("dataEdit");
+  const [isSignOutFeedbackVisible, displaySignOutFeedback] = useState(false);
+
+  function handleBack(): void {
     navigation.goBack();
   }
 
-  function handleSignOut() {}
-
-  function handleOptionChange(optionSelected: OptionSchema) {
+  function handleOptionChange(optionSelected: OptionSchema): void {
     setOption(optionSelected);
+  }
+
+  function handleDisplaySignOutFeedback(): void {
+    displaySignOutFeedback(!isSignOutFeedbackVisible);
+  }
+
+  async function handleSelectAvatar(): Promise<void> {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      quality: 1,
+      aspect: [4, 4],
+      allowsEditing: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    });
+
+    if (!result.cancelled) {
+      const { uri } = result as ImageInfo;
+      setAvatar(uri);
+    }
+
+    return;
   }
 
   return (
@@ -53,15 +80,15 @@ export function Profile() {
               <HeaderBackButton onPress={handleBack} />
               <HeaderTitle>Editar Perfil</HeaderTitle>
 
-              <LogoutButton onPress={handleSignOut}>
+              <LogoutButton onPress={handleDisplaySignOutFeedback}>
                 <LogoutIcon />
               </LogoutButton>
             </HeaderTop>
 
             <PhotoContainer>
-              <Photo />
+              {!!avatar && <Photo uri={avatar} />}
 
-              <EditPhotoButton>
+              <EditPhotoButton onPress={handleSelectAvatar}>
                 <EditPhotoIcon />
               </EditPhotoButton>
             </PhotoContainer>
@@ -86,8 +113,18 @@ export function Profile() {
               </OptionButton>
             </ContentHeader>
 
-            <SectionsField optionsSelected={option} />
+            <SectionsField userAvatar={avatar} optionsSelected={option} />
           </Content>
+
+          <ModalFeedback
+            buttonTitle="Sair"
+            title="Tem certeza?"
+            buttonAction={signOut}
+            optionButtonTitle="Cancelar"
+            isVisible={isSignOutFeedbackVisible}
+            optionButtonAction={handleDisplaySignOutFeedback}
+            message="Lembre-se, se você sair, irá precisar de internet para conectar-se novamente."
+          />
         </Container>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

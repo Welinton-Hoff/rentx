@@ -7,6 +7,9 @@ import { getStatusBarHeight } from "react-native-iphone-x-helper";
 interface OptionProps {
   active: boolean;
 }
+interface PhotoProps {
+  uri: string;
+}
 
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.background_primary};
@@ -54,17 +57,19 @@ export const PhotoContainer = styled.View`
   background-color: ${({ theme }) => theme.colors.shape};
 `;
 
-export const Photo = styled.Image.attrs({
+export const Photo = styled.Image.attrs(({ uri }: PhotoProps) => ({
   source: {
-    uri: "https://avatars.githubusercontent.com/u/62669413?v=4",
+    uri: uri,
   },
-})`
+}))<PhotoProps>`
   width: 180px;
   height: 180px;
   border-radius: 90px;
 `;
 
 export const EditPhotoButton = styled.TouchableOpacity`
+  z-index: 999;
+
   width: 40px;
   height: 40px;
 

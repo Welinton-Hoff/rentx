@@ -20,7 +20,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     loadUserData();
   }, []);
 
-  async function loadUserData() {
+  async function loadUserData(): Promise<void> {
     const userCollection = database.get<ModelUser>("users");
     const response = await userCollection.query().fetch();
 
@@ -36,7 +36,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signIn({ email, password }: SignInCredentials) {
+  async function signIn({ email, password }: SignInCredentials): Promise<void> {
     try {
       const response = await api.post("/sessions", { email, password });
 
@@ -65,8 +65,42 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signOut(): Promise<void> {
+    try {
+      const userCollection = database.get<ModelUser>("users");
+      await database.write(async () => {
+        const userSelected = await userCollection.find(data.id);
+
+        await userSelected.destroyPermanently();
+      });
+
+      setData({} as UserSchema);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async function userUpdate(user: UserSchema): Promise<void> {
+    try {
+      const userCollection = database.get<ModelUser>("users");
+      await database.write(async () => {
+        const userSelected = await userCollection.find(data.id);
+
+        await userSelected.update((userData) => {
+          userData.name = user.name;
+          userData.avatar = user.avatar;
+          userData.driver_license = user.driver_license;
+        });
+      });
+
+      setData(user);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user: data, signIn }}>
+    <AuthContext.Provider value={{ user: data, signIn, signOut, userUpdate }}>
       {children}
     </AuthContext.Provider>
   );

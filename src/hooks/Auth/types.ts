@@ -7,7 +7,7 @@ export interface UserSchema {
   email: string;
   avatar: string;
   user_id: string;
-  driverLicense: string;
+  driver_license: string;
 }
 
 export interface SignInCredentials {
@@ -17,6 +17,8 @@ export interface SignInCredentials {
 
 export interface AuthContextData {
   user: UserSchema;
+  signOut: () => Promise<void>;
+  userUpdate: (user: UserSchema) => Promise<void>;
   signIn: (credentials: SignInCredentials) => Promise<void>;
 }
 

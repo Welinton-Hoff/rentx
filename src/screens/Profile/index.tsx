@@ -7,13 +7,12 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
-import { Input } from "../../components/Input";
+import { SectionsField } from "./SectionsField";
 
 import {
   Photo,
   Header,
   Content,
-  Section,
   Container,
   HeaderTop,
   LogoutIcon,
@@ -27,7 +26,6 @@ import {
   EditPhotoButton,
   HeaderBackButton,
 } from "./styles";
-import { SectionsField } from "./SectionsField";
 
 export type OptionSchema = "dataEdit" | "passwordEdit";
 

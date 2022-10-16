@@ -1,5 +1,6 @@
-import { Dimensions, FlatList } from "react-native";
 import styled from "styled-components/native";
+import FastImage from "react-native-fast-image";
+import { Dimensions, FlatList } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 
 const { width } = Dimensions.get("window");
@@ -26,7 +27,7 @@ export const ImageList = styled(FlatList).attrs({
   showsHorizontalScrollIndicator: false,
 })`` as unknown as typeof FlatList;
 
-export const CarImage = styled.Image`
+export const CarImage = styled(FastImage)`
   width: ${RFValue(280)}px;
   height: ${RFValue(132)}px;
 `;

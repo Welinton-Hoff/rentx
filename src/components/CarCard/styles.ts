@@ -1,5 +1,6 @@
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
+import FastImage from "react-native-fast-image";
 import { TouchableOpacityProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 
@@ -59,7 +60,7 @@ export const Price = styled.Text`
 
 export const Type = styled.View``;
 
-export const CarImage = styled.Image`
+export const CarImage = styled(FastImage)`
   width: ${RFValue(167)}px;
   height: ${RFValue(85)}px;
 `;

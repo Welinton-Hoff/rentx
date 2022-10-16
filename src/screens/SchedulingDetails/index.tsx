@@ -1,7 +1,7 @@
 import { format } from "date-fns";
-import { Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState, Fragment } from "react";
 
 import api from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
@@ -11,6 +11,7 @@ import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import { Slider } from "../../components/Slider";
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
+import { ModalFeedback } from "../../components/ModalFeedback";
 
 import {
   Rent,
@@ -33,6 +34,7 @@ import {
   RentalPrice,
   CalendarIcon,
   RentalPeriod,
+  LoadIndicator,
   RentNowButton,
   RentalPriceLabe,
   RentalPriceQuota,
@@ -53,11 +55,16 @@ interface RentalSchema {
 
 export function SchedulingDetails() {
   const [scheduling, setScheduling] = useState(false);
+  const [failureMessage, setFailureMessage] = useState("");
+  const [loaderFeedback, setLoaderFeedback] = useState(true);
+  const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO);
+  const [isFailureFeedbackVisible, displayFailureFeedback] = useState(false);
   const [rentalPeriod, setRentalPeriod] = useState<RentalSchema>(
     {} as RentalSchema
   );
 
   const route = useRoute();
+  const netInfo = useNetInfo();
   const navigation = useNavigation();
   const { car, dates } = route.params as ParamsSchema;
   const rentTotal = Number(dates.length * car.price);
@@ -65,6 +72,33 @@ export function SchedulingDetails() {
   useEffect(() => {
     onRentalPeriod();
   }, []);
+
+  useEffect(() => {
+    if (!netInfo.isConnected && !loaderFeedback) {
+      setFailureMessage(
+        "Conecte-se a Internet para prosseguir com o seu agendamento."
+      );
+
+      displayFailureFeedback(true);
+      return;
+    }
+
+    if (!!netInfo.isConnected) {
+      fetchCarUpdated();
+      return;
+    }
+
+    setTimeout(() => {
+      setLoaderFeedback(false);
+    }, 5000);
+  }, [netInfo.isConnected]);
+
+  async function fetchCarUpdated() {
+    const { data } = await api.get(`/cars/${car.id}`);
+
+    setCarUpdated(data);
+    setLoaderFeedback(false);
+  }
 
   function onRentalPeriod(): void {
     const startDate = format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy");
@@ -91,47 +125,68 @@ export function SchedulingDetails() {
     });
   }
 
-  async function handleConfirmRental(): Promise<void> {
-    try {
-      setScheduling(true);
-
-      const response = await api.get(`/schedules_bycars/${car.id}`);
-      const unavailable_dates = [...response.data.unavailable_dates, ...dates];
-
-      const scheduleCarByUser = await api.post("schedules_byuser", {
-        user_id: 1,
-        car,
-        startDate: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
-        endDate: format(
-          getPlatformDate(new Date(dates[dates.length - 1])),
-          "dd/MM/yyyy"
-        ),
-      });
-
-      const scheduleCar = await api.put(`/schedules_bycars/${car.id}`, {
-        id: car.id,
-        unavailable_dates,
-      });
-
-      if (scheduleCar.status === 200 && scheduleCarByUser.status === 201) {
-        return onNavigateSuccessFeedback();
-      }
-    } catch (error) {
-      Alert.alert("Agendamento", "Não foi possível confirmar o agendamento.");
-    }
+  function getSliderImage() {
+    return !!carUpdated.photos
+      ? carUpdated.photos
+      : [{ id: car.thumbnail, photo: car.thumbnail }];
   }
 
-  return (
-    <Container>
-      <Header>
-        <BackButton onPress={handleGoBackScheduling} />
-      </Header>
+  function onCloseFailureFeedback(): void {
+    setScheduling(false);
+    displayFailureFeedback(false);
+  }
 
-      <CarImages>
-        <Slider imagesUrl={car.photos} />
-      </CarImages>
+  function getCarPrice() {
+    return !!netInfo.isConnected ? car?.price : "...";
+  }
 
-      <Content>
+  async function handleConfirmRental(): Promise<void> {
+    setScheduling(true);
+
+    await api
+      .post("rentals", {
+        user_id: 1,
+        car_id: car.id,
+        total: rentTotal,
+        start_date: new Date(dates[0]),
+        end_date: new Date(dates[dates.length - 1]),
+      })
+      .then(() => {
+        onNavigateSuccessFeedback();
+      })
+      .catch(() => {
+        setFailureMessage(
+          "Não foi possível confirmar o agendamento. Por favor, tente novamente."
+        );
+        displayFailureFeedback(true);
+      });
+  }
+
+  const AccessoriesCar = useCallback(() => {
+    if (!!netInfo.isConnected && carUpdated?.accessories) {
+      return (
+        <Accessories>
+          {carUpdated?.accessories.map((accessory) => (
+            <Accessory
+              key={accessory.type}
+              name={accessory.name}
+              icon={getAccessoryIcon(accessory.type)}
+            />
+          ))}
+        </Accessories>
+      );
+    }
+
+    return null;
+  }, [carUpdated, netInfo.isConnected]);
+
+  const ContentBody = useCallback(() => {
+    if (loaderFeedback) {
+      return <LoadIndicator />;
+    }
+
+    return (
+      <Fragment>
         <Details>
           <Description>
             <Brand>{car?.brand}</Brand>
@@ -140,19 +195,27 @@ export function SchedulingDetails() {
 
           <Rent>
             <Period>{car?.period}</Period>
-            <Price>R$ {car?.price}</Price>
+            <Price>R$ {getCarPrice()}</Price>
           </Rent>
         </Details>
 
-        <Accessories>
-          {car.accessories.map((accessory) => (
-            <Accessory
-              key={accessory.type}
-              name={accessory.name}
-              icon={getAccessoryIcon(accessory.type)}
-            />
-          ))}
-        </Accessories>
+        <AccessoriesCar />
+      </Fragment>
+    );
+  }, [car, loaderFeedback]);
+
+  return (
+    <Container>
+      <Header>
+        <BackButton onPress={handleGoBackScheduling} />
+      </Header>
+
+      <CarImages>
+        <Slider imagesUrl={getSliderImage()} />
+      </CarImages>
+
+      <Content>
+        <ContentBody />
 
         <RentalPeriod>
           <CalendarIconContainer>
@@ -186,10 +249,18 @@ export function SchedulingDetails() {
         <RentNowButton
           title="Alugar agora"
           isLoading={scheduling}
-          isDisabled={scheduling}
           onPress={handleConfirmRental}
+          disabled={!netInfo.isConnected && scheduling}
         />
       </Footer>
+
+      <ModalFeedback
+        title="Ops!"
+        buttonTitle="Continuar"
+        message={failureMessage}
+        buttonAction={onCloseFailureFeedback}
+        isVisible={isFailureFeedbackVisible && !loaderFeedback}
+      />
     </Container>
   );
 }

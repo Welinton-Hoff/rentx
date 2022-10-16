@@ -1,7 +1,8 @@
-import { ScrollView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { ActivityIndicator, ScrollView } from "react-native";
+
 import {
   getBottomSpace,
   getStatusBarHeight,
@@ -12,6 +13,13 @@ import { Button } from "../../components/Button";
 export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background_secudanry};
+`;
+
+export const LoadIndicator = styled(ActivityIndicator).attrs(({ theme }) => ({
+  color: theme.colors.main,
+  size: "large",
+}))`
+  margin-top: 50%;
 `;
 
 export const Header = styled.View`

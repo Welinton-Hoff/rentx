@@ -18,8 +18,8 @@ import {
   Container,
   PeriodDate,
   ChevronIcon,
-  RentalPeriod,
   PeriodWrapper,
+  RentalContainer,
   RentalPeriodTitle,
 } from "./styles";
 
@@ -39,10 +39,10 @@ export function CarCard(props: CarCardProps) {
     return !!netInfo.isConnected ? data?.price : "...";
   }
 
-  const HasRentalPeriod = () => {
+  const RentalPeriod = () => {
     if (startDate && endDate) {
       return (
-        <RentalPeriod>
+        <RentalContainer>
           <RentalPeriodTitle>Período</RentalPeriodTitle>
 
           <PeriodWrapper>
@@ -50,7 +50,7 @@ export function CarCard(props: CarCardProps) {
             <ChevronIcon />
             <PeriodDate>{endDate}</PeriodDate>
           </PeriodWrapper>
-        </RentalPeriod>
+        </RentalContainer>
       );
     }
 
@@ -84,7 +84,7 @@ export function CarCard(props: CarCardProps) {
         />
       </Container>
 
-      <HasRentalPeriod />
+      <RentalPeriod />
     </>
   );
 }

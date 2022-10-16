@@ -65,7 +65,7 @@ export const CarImage = styled(FastImage)`
   height: ${RFValue(85)}px;
 `;
 
-export const RentalPeriod = styled.View`
+export const RentalContainer = styled.View`
   width: 100%;
 
   flex-direction: row;
@@ -74,6 +74,7 @@ export const RentalPeriod = styled.View`
 
   padding: 12px;
   margin-top: -10px;
+  margin-bottom: 12px;
 
   background-color: ${({ theme }) => theme.colors.background_secudanry}; ;
 `;

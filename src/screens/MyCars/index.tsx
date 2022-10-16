@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { parseISO } from "date-fns";
+import { format } from "date-fns/esm";
 import { ListRenderItem, StatusBar } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 
 import api from "../../services/api";
-import { CarDTO } from "../../dtos/CarDTO";
+import { Car as ModelCar } from "../../database/model/Car";
 
 import { CarCard } from "../../components/CarCard";
 import { LoaderAnimated } from "../../components/LoaderAnimated";
@@ -23,56 +25,63 @@ import {
 
 interface CarSchema {
   id: string;
-  car: CarDTO;
-  user_id: string;
-  endDate: string;
-  startDate: string;
+  car: ModelCar;
+  end_date: string;
+  start_date: string;
 }
 
 export function MyCars() {
-  const navigation = useNavigation();
-
   const [isLoading, setLoading] = useState(true);
   const [cars, setCars] = useState<CarSchema[]>([]);
 
+  const navigation = useNavigation();
+  const screenIsFocused = useIsFocused();
+
   useEffect(() => {
     fetchCars();
-  }, []);
-
-  function handleBackToHome(): void {
-    navigation.goBack();
-  }
+  }, [screenIsFocused]);
 
   async function fetchCars(): Promise<void> {
     try {
-      const response = await api.get("schedules_byuser?user_id=1");
-      setCars(response.data);
+      const response = await api.get("/rentals");
+      const data = response.data.map((data) => {
+        return {
+          id: data.id,
+          car: data.car,
+          start_date: format(parseISO(data.start_date), "dd/MM/yyyy"),
+          end_date: format(parseISO(data.end_date), "dd/MM/yyyy"),
+        };
+      });
+
+      setCars(data);
     } catch (error) {
       console.log(error.message);
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
+      setLoading(false);
     }
+  }
+
+  function handleBackToHome(): void {
+    navigation.goBack();
   }
 
   const renderItem: ListRenderItem<CarSchema> = ({ item }) => {
     return (
       <CarCard
         data={item.car}
-        endDate={item.endDate}
-        startDate={item.startDate}
+        endDate={item.end_date}
+        startDate={item.start_date}
       />
     );
   };
 
-  const HasContent = () => {
+  const ContentBody = useCallback(() => {
     if (isLoading) {
       return <LoaderAnimated />;
     }
 
     return (
-      <>
+      <Fragment>
         <Appointments>
           <AppointmentsTitle>Agendamentos realizados</AppointmentsTitle>
           <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
@@ -83,9 +92,9 @@ export function MyCars() {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
-      </>
+      </Fragment>
     );
-  };
+  }, [cars, isLoading]);
 
   return (
     <Container>
@@ -106,7 +115,7 @@ export function MyCars() {
       </Header>
 
       <Content>
-        <HasContent />
+        <ContentBody />
       </Content>
     </Container>
   );

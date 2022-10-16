@@ -7,6 +7,7 @@ import {
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 
@@ -35,23 +36,34 @@ import {
 export type OptionSchema = "dataEdit" | "passwordEdit";
 
 export function Profile() {
+  const netInfo = useNetInfo();
   const navigation = useNavigation();
   const { user, signOut } = useAuth();
 
   const [avatar, setAvatar] = useState(user.avatar);
   const [option, setOption] = useState<OptionSchema>("dataEdit");
   const [isSignOutFeedbackVisible, displaySignOutFeedback] = useState(false);
+  const [isPasswordChangeBlockedVisible, displayPasswordChangeBlocked] =
+    useState(false);
 
   function handleBack(): void {
     navigation.goBack();
   }
 
   function handleOptionChange(optionSelected: OptionSchema): void {
+    if (!netInfo.isConnected && optionSelected === "passwordEdit") {
+      handleDisplayPasswordChangeBlocked();
+    }
+
     setOption(optionSelected);
   }
 
   function handleDisplaySignOutFeedback(): void {
     displaySignOutFeedback(!isSignOutFeedbackVisible);
+  }
+
+  function handleDisplayPasswordChangeBlocked(): void {
+    displayPasswordChangeBlocked(!isPasswordChangeBlockedVisible);
   }
 
   async function handleSelectAvatar(): Promise<void> {
@@ -114,6 +126,14 @@ export function Profile() {
 
             <SectionsField userAvatar={avatar} optionsSelected={option} />
           </Content>
+
+          <ModalFeedback
+            title="Ops!"
+            buttonTitle="Continuar"
+            isVisible={isPasswordChangeBlockedVisible}
+            buttonAction={handleDisplayPasswordChangeBlocked}
+            message="Para alterar a senha, conecte-se a Internet."
+          />
 
           <ModalFeedback
             buttonTitle="Sair"

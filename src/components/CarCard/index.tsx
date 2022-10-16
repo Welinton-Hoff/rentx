@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacityProps } from "react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 import { Car as ModelCar } from "../../database/model/Car";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
@@ -30,7 +31,13 @@ interface CarCardProps extends TouchableOpacityProps {
 
 export function CarCard(props: CarCardProps) {
   const { data, endDate, startDate, ...rest } = props;
+
+  const netInfo = useNetInfo();
   const MotorICon = getAccessoryIcon(data.fuel_type);
+
+  function getCarPrice() {
+    return !!netInfo.isConnected ? data?.price : "...";
+  }
 
   const HasRentalPeriod = () => {
     if (startDate && endDate) {
@@ -60,7 +67,7 @@ export function CarCard(props: CarCardProps) {
           <About>
             <Rent>
               <Period>{data.period}</Period>
-              <Price>{`R$ ${data.price}`}</Price>
+              <Price>R$ ${getCarPrice()}</Price>
             </Rent>
 
             <Type>

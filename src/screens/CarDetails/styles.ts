@@ -1,6 +1,8 @@
 import styled from "styled-components/native";
 import Animated from "react-native-reanimated";
+import { ActivityIndicator } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+
 import {
   getBottomSpace,
   getStatusBarHeight,
@@ -9,6 +11,13 @@ import {
 export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background_secudanry};
+`;
+
+export const LoadIndicator = styled(ActivityIndicator).attrs(({ theme }) => ({
+  color: theme.colors.main,
+  size: "large",
+}))`
+  margin-top: 50%;
 `;
 
 export const HeaderAnimated = styled(Animated.View).attrs({})`

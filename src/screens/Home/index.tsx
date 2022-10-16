@@ -4,13 +4,17 @@ import {
   useAnimatedStyle,
   useAnimatedGestureHandler,
 } from "react-native-reanimated";
+import { synchronize } from "@nozbe/watermelondb/sync";
 import { useNavigation } from "@react-navigation/native";
 import { ListRenderItem, StatusBar } from "react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
 import React, { useCallback, useEffect, useState } from "react";
 import { PanGestureHandler } from "react-native-gesture-handler";
 
 import api from "../../services/api";
-import { CarDTO } from "../../dtos/CarDTO";
+import { database } from "../../database";
+import { Car as ModelCar } from "../../database/model/Car";
+
 import { CarCard } from "../../components/CarCard";
 import { LoaderAnimated } from "../../components/LoaderAnimated";
 
@@ -27,22 +31,30 @@ import {
 } from "./styles";
 
 export function Home() {
+  const netInfo = useNetInfo();
   const navigation = useNavigation();
   const positionY = useSharedValue(0);
   const positionX = useSharedValue(0);
 
   const [isLoading, setLoading] = useState(true);
-  const [carData, setCarData] = useState<CarDTO[]>([]);
+  const [carData, setCarData] = useState<ModelCar[]>([]);
+
+  useEffect(() => {
+    if (netInfo.isConnected) {
+      offLineSynchronize();
+    }
+  }, [netInfo]);
 
   useEffect(() => {
     let isMounted = true;
 
     async function fetchCarsForScheduling(): Promise<void> {
       try {
-        const response = await api.get("/cars");
+        const carCollection = database.get<ModelCar>("cars");
+        const cars = await carCollection.query().fetch();
 
         if (isMounted) {
-          setCarData(response.data);
+          setCarData(cars);
         }
       } catch (error) {
         console.log(error.message);
@@ -84,7 +96,25 @@ export function Home() {
     },
   });
 
-  function handleCarDetails(car: CarDTO): void {
+  async function offLineSynchronize(): Promise<void> {
+    await synchronize({
+      database,
+      pullChanges: async ({ lastPulledAt }) => {
+        const { data } = await api.get(
+          `cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`
+        );
+
+        const { changes, latestVersion } = data;
+        return { changes, timestamp: latestVersion };
+      },
+      pushChanges: async ({ changes }) => {
+        const user = changes.users;
+        await api.post("/users/sync", user);
+      },
+    });
+  }
+
+  function handleCarDetails(car: ModelCar): void {
     navigation.navigate("CarDetails", { car });
   }
 
@@ -92,7 +122,7 @@ export function Home() {
     navigation.navigate("MyCars");
   }
 
-  const renderItem: ListRenderItem<CarDTO> = useCallback(
+  const renderItem: ListRenderItem<ModelCar> = useCallback(
     (props) => {
       const { item } = props;
       return <CarCard data={item} onPress={() => handleCarDetails(item)} />;

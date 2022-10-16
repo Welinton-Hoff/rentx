@@ -1,5 +1,4 @@
 import {
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,

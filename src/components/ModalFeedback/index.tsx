@@ -17,7 +17,7 @@ interface ModalFeedbackProps {
   buttonTitle?: string;
   buttonAction: () => void;
   optionButtonTitle?: string;
-  optionButtonAction: () => void;
+  optionButtonAction?: () => void;
 }
 
 export function ModalFeedback(props: ModalFeedbackProps) {

@@ -1,5 +1,4 @@
 import {
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -9,8 +8,10 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 import api from "../../../services/api";
 import { userDataSchema } from "../InitialData";
+
 import { Input } from "../../../components/Input";
 import { BackButton } from "../../../components/BackButton";
+import { ModalFeedback } from "../../../components/ModalFeedback";
 import { PaginationIndicator } from "../../../components/PaginationIndicator";
 
 import {
@@ -35,14 +36,18 @@ export function CreatePassword() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isFailureFeedbackVisible, displayFailureFeedback] = useState(false);
 
   async function onRegister(): Promise<void> {
     if (!password || !confirmPassword) {
-      return Alert.alert("Informe a senha e confirme-a.");
+      setFeedbackMessage("Informe a senha e confirme-a.");
+      return handleDisplaySignOutFeedback();
     }
 
     if (password !== confirmPassword) {
-      return Alert.alert("Por favor, revise sua senha.");
+      setFeedbackMessage("Por favor, revise sua senha.");
+      return handleDisplaySignOutFeedback();
     }
 
     await api
@@ -53,7 +58,12 @@ export function CreatePassword() {
         driver_license: userData.driverLicense,
       })
       .then(() => onNavigateSuccessFeedback())
-      .catch(() => handleFailureFeedback());
+      .catch(() => {
+        handleDisplaySignOutFeedback();
+        setFeedbackMessage(
+          "Algo de inesperado ocorreu, por favor tente novamente mais tarde."
+        );
+      });
   }
 
   function onGoBackNavigate(): void {
@@ -68,11 +78,8 @@ export function CreatePassword() {
     });
   }
 
-  function handleFailureFeedback(): void {
-    Alert.alert(
-      "Ops",
-      "Algo de inesperado ocorreu, por favor tente novamente mais tarde."
-    );
+  function handleDisplaySignOutFeedback(): void {
+    displayFailureFeedback(!isFailureFeedbackVisible);
   }
 
   return (
@@ -115,6 +122,14 @@ export function CreatePassword() {
           </FormView>
 
           <RegisterButton title="Cadastrar" onPress={onRegister} />
+
+          <ModalFeedback
+            title="Ops!"
+            buttonTitle="Continuar"
+            message={feedbackMessage}
+            isVisible={isFailureFeedbackVisible}
+            buttonAction={handleDisplaySignOutFeedback}
+          />
         </Container>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

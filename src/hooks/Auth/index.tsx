@@ -14,6 +14,7 @@ import {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<UserSchema>({} as UserSchema);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       });
 
       setData(userData);
+      setLoading(false);
     }
   }
 
@@ -100,7 +102,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user: data, signIn, signOut, userUpdate }}>
+    <AuthContext.Provider
+      value={{ user: data, signIn, signOut, userUpdate, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

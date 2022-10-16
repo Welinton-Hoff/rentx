@@ -1,14 +1,14 @@
 import * as Yup from "yup";
-import { Alert } from "react-native";
 import React, { Fragment, useCallback, useState } from "react";
 
-import { useAuth } from "../../../hooks/Auth";
-
-import { Section } from "./styles";
 import { OptionSchema } from "..";
+import { useAuth } from "../../../hooks/Auth";
 
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
+import { ModalFeedback } from "../../../components/ModalFeedback";
+
+import { Section, ButtonContainer } from "./styles";
 
 interface SectionsFieldProps {
   userAvatar: string;
@@ -21,6 +21,9 @@ export function SectionsField(props: SectionsFieldProps) {
 
   const [name, setName] = useState(user.name);
   const [driverLicense, setDriverLicense] = useState(user.name);
+  const [modalTitleFeedback, setModalTitleFeedback] = useState("");
+  const [modalMessageFeedback, setModalMessageFeedback] = useState("");
+  const [isSuccessFeedbackVisible, displaySuccessFeedback] = useState(false);
 
   const isEditOptionVisible = optionsSelected === "dataEdit";
 
@@ -43,15 +46,27 @@ export function SectionsField(props: SectionsFieldProps) {
         driver_license: driverLicense,
       });
 
-      Alert.alert("Perfil atualziado!");
+      setModalMessageFeedback("");
+      setModalTitleFeedback("Perfil atualziado!");
+
+      handleDisplaySuccessFeedback();
     } catch (error) {
+      let message = "Não foi possível atualizar os seus dados.";
+
       if (error instanceof Yup.ValidationError) {
-        return Alert.alert("Ops!", error.message);
+        message = error.message;
       }
 
+      setModalTitleFeedback("Ops!");
+      setModalMessageFeedback(message);
+
       console.log(error.message);
-      Alert.alert("Não foi possível atualizar os seus dados.");
+      handleDisplaySuccessFeedback();
     }
+  }
+
+  function handleDisplaySuccessFeedback(): void {
+    displaySuccessFeedback(!isSuccessFeedbackVisible);
   }
 
   const Fields = useCallback(() => {
@@ -108,7 +123,18 @@ export function SectionsField(props: SectionsFieldProps) {
   return (
     <Section>
       <Fields />
-      <Button title="Salvar alteraçõpes" onPress={handleProfileUpdate} />
+
+      <ButtonContainer>
+        <Button title="Salvar alteraçõpes" onPress={handleProfileUpdate} />
+      </ButtonContainer>
+
+      <ModalFeedback
+        buttonTitle="Continuar"
+        title={modalTitleFeedback}
+        message={modalMessageFeedback}
+        isVisible={isSuccessFeedbackVisible}
+        buttonAction={handleDisplaySuccessFeedback}
+      />
     </Section>
   );
 }

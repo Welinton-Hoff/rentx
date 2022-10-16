@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacityProps } from "react-native";
 
-import { CarDTO } from "../../dtos/CarDTO";
+import { Car as ModelCar } from "../../database/model/Car";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 import {
@@ -23,7 +23,7 @@ import {
 } from "./styles";
 
 interface CarCardProps extends TouchableOpacityProps {
-  data: CarDTO;
+  data: ModelCar;
   endDate?: string;
   startDate?: string;
 }
@@ -54,8 +54,8 @@ export function CarCard(props: CarCardProps) {
     <>
       <Container {...rest} activeOpacity={0.7}>
         <Details>
-          <Brand>{data.name}</Brand>
-          <CarName>{data.brand}</CarName>
+          <Brand>{data.brand}</Brand>
+          <CarName>{data.name}</CarName>
 
           <About>
             <Rent>

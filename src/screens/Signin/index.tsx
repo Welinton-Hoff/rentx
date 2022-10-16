@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import {
-  Alert,
   Keyboard,
   StatusBar,
   KeyboardAvoidingView,
@@ -12,6 +11,7 @@ import {
 
 import { useAuth } from "../../hooks/Auth";
 import { Input } from "../../components/Input";
+import { ModalFeedback } from "../../components/ModalFeedback";
 
 import {
   Title,
@@ -30,6 +30,8 @@ export function SignIn() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isFailureFeedbackVisible, displayFailureFeedback] = useState(false);
 
   async function onSignIn(): Promise<void> {
     try {
@@ -52,15 +54,19 @@ export function SignIn() {
     navigation.navigate("InitialData");
   }
 
-  function getAuthenticationError(error: unknown | Yup.ValidationError) {
+  function handleDisplaySignOutFeedback(): void {
+    displayFailureFeedback(!isFailureFeedbackVisible);
+  }
+
+  function getAuthenticationError(error: unknown | Yup.ValidationError): void {
+    let message = "Erro na autenticação, verifique as credencias.";
+
     if (error instanceof Yup.ValidationError) {
-      return Alert.alert("Ops!", error.message);
+      message = error.message;
     }
 
-    return Alert.alert(
-      "Ops!",
-      "Erro na autenticação, verifique as credencias."
-    );
+    setFeedbackMessage(message);
+    handleDisplaySignOutFeedback();
   }
 
   return (
@@ -116,6 +122,14 @@ export function SignIn() {
               onPress={onCreateNewAccount}
             />
           </Footer>
+
+          <ModalFeedback
+            title="Ops!"
+            buttonTitle="Continuar"
+            message={feedbackMessage}
+            isVisible={isFailureFeedbackVisible}
+            buttonAction={handleDisplaySignOutFeedback}
+          />
         </Container>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

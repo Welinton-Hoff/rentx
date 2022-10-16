@@ -24,13 +24,14 @@ export const Content = styled.View`
 `;
 
 export const Title = styled.Text`
+  padding-bottom: 40px;
   font-size: ${RFValue(28)}px;
   color: ${({ theme }) => theme.colors.title};
   font-family: ${({ theme }) => theme.fonts.secudanry_600};
 `;
 
 export const Description = styled.Text`
-  padding: 40px 20px;
+  padding: 0 20px;
   font-size: ${RFValue(15)}px;
   line-height: ${RFValue(25)}px;
   color: ${({ theme }) => theme.colors.text};

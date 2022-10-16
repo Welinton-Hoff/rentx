@@ -3,7 +3,6 @@ import { Platform } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Home } from "../screens/Home";
 import { MyCars } from "../screens/MyCars";
 import { Profile } from "../screens/Profile";
 
